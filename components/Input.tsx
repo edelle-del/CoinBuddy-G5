@@ -11,7 +11,10 @@ const Input = (props: InputProps) => {
     >
       {props.icon && props.icon}
       <TextInput
-        style={{ flex: 1 }}
+        style={[
+          { flex: 1, color: colors.white, fontSize: verticalScale(14) },
+          props.inputStyle,
+        ]}
         placeholderTextColor={colors.neutral300}
         ref={props.inputRef && props.inputRef}
         {...props}
@@ -29,7 +32,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: colors.neutral400,
+    borderColor: colors.neutral300,
     borderRadius: radius._17,
     borderCurve: "continuous",
     paddingHorizontal: 18,

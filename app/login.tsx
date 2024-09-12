@@ -1,5 +1,6 @@
 import {
   Alert,
+  Image,
   Pressable,
   StyleSheet,
   Text,
@@ -13,10 +14,11 @@ import { useRouter } from "expo-router";
 import BackButton from "@/components/BackButton";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
-import { verticalScale } from "@/utils/styling";
+import { scale, verticalScale } from "@/utils/styling";
 import { colors, spacingX } from "@/constants/theme";
 import Typo from "@/components/Typo";
 import Icon from "@/assets/icons";
+import * as Icons from "phosphor-react-native";
 
 const Login = () => {
   const router = useRouter();
@@ -29,6 +31,7 @@ const Login = () => {
       Alert.alert("Login", "please fill all the fields!");
       return;
     }
+    // login api
   };
 
   return (
@@ -36,7 +39,6 @@ const Login = () => {
       <StatusBar style="light" />
       <View style={styles.container}>
         <BackButton />
-
         {/* welcome */}
         <View style={{ gap: 5, marginTop: verticalScale(20) }}>
           <Typo size={30} fontWeight={"800"}>
@@ -50,18 +52,26 @@ const Login = () => {
         {/* form */}
         <View style={styles.form}>
           <Typo size={16} color={colors.textLighter}>
-            Login now to track all your expaneses
+            Login now to track all your expenses
           </Typo>
           <Input
             icon={
-              <Icon name="mail" color={colors.neutral300} strokeWidth={1.6} />
+              <Icons.At
+                size={verticalScale(26)}
+                color={colors.neutral300}
+                weight="fill"
+              />
             }
             placeholder="Enter your email"
             onChangeText={(value) => (emailRef.current = value)}
           />
           <Input
             icon={
-              <Icon name="lock" color={colors.neutral300} strokeWidth={1.6} />
+              <Icons.Lock
+                size={verticalScale(26)}
+                color={colors.neutral300}
+                weight="fill"
+              />
             }
             placeholder="Enter your password"
             secureTextEntry
@@ -81,7 +91,7 @@ const Login = () => {
         {/* footer */}
         <View style={styles.footer}>
           <Typo size={15}>Dont't have an account?</Typo>
-          <Pressable onPress={() => router.push("/register")}>
+          <Pressable onPress={() => router.navigate("/register")}>
             <Typo size={15} fontWeight={"700"} color={colors.primary}>
               Sign up
             </Typo>

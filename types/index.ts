@@ -1,5 +1,7 @@
 import React from "react";
 import {
+  ActivityIndicator,
+  ActivityIndicatorProps,
   PressableProps,
   TextInput,
   TextInputProps,
@@ -33,6 +35,7 @@ export type IconProps = {
   color?: string;
   size?: number;
   strokeWidth?: number;
+  fill?: string;
 };
 
 export interface InputProps extends TextInputProps {

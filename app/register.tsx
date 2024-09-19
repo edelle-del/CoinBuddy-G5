@@ -18,20 +18,33 @@ import { colors, spacingX, spacingY } from "@/constants/theme";
 import Typo from "@/components/Typo";
 import Icon from "@/assets/icons";
 import * as Icons from "phosphor-react-native";
+import { useAuth } from "@/contexts/authContext";
 
 const SignUp = () => {
   const router = useRouter();
   const emailRef = useRef("");
   const passwordRef = useRef("");
-  const usernameRef = useRef("");
+  const nameRef = useRef("");
   const [loading, setLoading] = useState(false);
+  const { register } = useAuth();
 
   const onSubmit = async () => {
-    if (!emailRef.current || !passwordRef.current || !usernameRef.current) {
-      Alert.alert("Sign Up", "please fill all the fields!");
+    if (!emailRef.current || !passwordRef.current || !nameRef.current) {
+      Alert.alert("Register", "please fill all the fields!");
       return;
     }
     // register api
+
+    setLoading(true);
+    const res = await register(
+      emailRef.current,
+      passwordRef.current,
+      nameRef.current
+    );
+    setLoading(false);
+    if (!res.success) {
+      Alert.alert("Register", res.msg);
+    }
   };
 
   return (
@@ -63,8 +76,8 @@ const SignUp = () => {
                 weight="fill"
               />
             }
-            placeholder="Enter your username"
-            onChangeText={(value) => (emailRef.current = value)}
+            placeholder="Enter your name"
+            onChangeText={(value) => (nameRef.current = value)}
           />
           <Input
             icon={

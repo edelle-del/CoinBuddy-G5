@@ -55,3 +55,25 @@ export interface CustomButtonProps extends PressableProps {
   hasShadow?: boolean;
   children: React.ReactNode;
 }
+
+export type UserType = {
+  uid: string;
+  email: string | null;
+  name: string | null;
+  image?: string | null;
+} | null;
+
+export type AuthContextType = {
+  user: UserType;
+  loading: boolean;
+  login: (
+    email: string,
+    password: string
+  ) => Promise<{ success: boolean; msg?: string }>;
+  register: (
+    email: string,
+    password: string,
+    name: string
+  ) => Promise<{ success: boolean; msg?: string }>;
+  updateUserData: (userId: string) => Promise<void>;
+};

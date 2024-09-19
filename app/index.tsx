@@ -8,11 +8,21 @@ import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import Typo from "@/components/Typo";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import Button from "@/components/Button";
+import { useAuth } from "@/contexts/authContext";
+import Loading from "@/components/Loading";
 
 const WelcomePage = () => {
   const router: Router = useRouter();
+  const { loading: isAuthenticating } = useAuth();
+  if (isAuthenticating) {
+    return (
+      <ScreenWrapper>
+        <Loading />
+      </ScreenWrapper>
+    );
+  }
   return (
-    <ScreenWrapper style={{ backgroundColor: colors.neutral800 }}>
+    <ScreenWrapper>
       <StatusBar style="light" />
       <View style={styles.container}>
         {/* login & image */}
@@ -66,7 +76,7 @@ const WelcomePage = () => {
               .damping(12)}
             style={styles.buttonContainer}
           >
-            <Button onPress={() => router.push("/(tabs)")}>
+            <Button onPress={() => router.push("/register")}>
               <Typo size={22} color={colors.neutral900} fontWeight={"600"}>
                 Get Started
               </Typo>

@@ -17,21 +17,27 @@ import Button from "@/components/Button";
 import { scale, verticalScale } from "@/utils/styling";
 import { colors, spacingX } from "@/constants/theme";
 import Typo from "@/components/Typo";
-import Icon from "@/assets/icons";
 import * as Icons from "phosphor-react-native";
+import { useAuth } from "@/contexts/authContext";
 
 const Login = () => {
   const router = useRouter();
   const emailRef = useRef("");
   const passwordRef = useRef("");
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
   const onSubmit = async () => {
     if (!emailRef.current || !passwordRef.current) {
       Alert.alert("Login", "please fill all the fields!");
       return;
     }
-    // login api
+    setLoading(true);
+    const res = await login(emailRef.current, passwordRef.current);
+    setLoading(false);
+    if (!res.success) {
+      Alert.alert("Login", res.msg);
+    }
   };
 
   return (

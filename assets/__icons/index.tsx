@@ -10,7 +10,7 @@ const icons: { [key: string]: ImageSourcePropType } = {
   mail: require("./mail.png"),
 };
 
-const Icon = ({ name, size = 22, color = colors.gray }: IconProps) => {
+const Icon = ({ name, size = 22, color = colors.white }: IconProps) => {
   return (
     <Image
       source={icons[name]}

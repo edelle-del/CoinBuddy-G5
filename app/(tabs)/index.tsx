@@ -7,6 +7,9 @@ import { colors, radius, spacingX } from "@/constants/theme";
 import * as Icons from "phosphor-react-native";
 import { scale, verticalScale } from "@/utils/styling";
 import HomeCard from "@/components/HomeCard";
+import Button from "@/components/Button";
+import { signOut } from "firebase/auth";
+import { auth } from "@/config/firebase";
 const Home = () => {
   return (
     <ScreenWrapper>
@@ -30,6 +33,10 @@ const Home = () => {
         <View style={{ marginTop: 20 }}>
           <HomeCard />
         </View>
+
+        <Button onPress={async () => await signOut(auth)}>
+          <Typo color={colors.black}>Logout</Typo>
+        </Button>
       </View>
     </ScreenWrapper>
   );

@@ -1,5 +1,6 @@
 import {
   Alert,
+  Image,
   Pressable,
   StyleSheet,
   Text,
@@ -7,43 +8,35 @@ import {
   View,
 } from "react-native";
 import React, { useRef, useState } from "react";
-import ScreenWrapper from "../components/ScreenWrapper";
+import ScreenWrapper from "../../components/ScreenWrapper";
 import { StatusBar } from "expo-status-bar";
 import { useRouter } from "expo-router";
 import BackButton from "@/components/BackButton";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
-import { verticalScale } from "@/utils/styling";
+import { scale, verticalScale } from "@/utils/styling";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import Typo from "@/components/Typo";
-import Icon from "@/assets/icons";
 import * as Icons from "phosphor-react-native";
 import { useAuth } from "@/contexts/authContext";
 
-const SignUp = () => {
+const Login = () => {
   const router = useRouter();
   const emailRef = useRef("");
   const passwordRef = useRef("");
-  const nameRef = useRef("");
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
+  const { login } = useAuth();
 
   const onSubmit = async () => {
-    if (!emailRef.current || !passwordRef.current || !nameRef.current) {
-      Alert.alert("Register", "please fill all the fields!");
+    if (!emailRef.current || !passwordRef.current) {
+      Alert.alert("Login", "please fill all the fields!");
       return;
     }
-    // register api
-
     setLoading(true);
-    const res = await register(
-      emailRef.current,
-      passwordRef.current,
-      nameRef.current
-    );
+    const res = await login(emailRef.current, passwordRef.current);
     setLoading(false);
     if (!res.success) {
-      Alert.alert("Register", res.msg);
+      Alert.alert("Login", res.msg);
     }
   };
 
@@ -52,33 +45,21 @@ const SignUp = () => {
       <StatusBar style="light" />
       <View style={styles.container}>
         <BackButton />
-
         {/* welcome */}
-        <View style={{ gap: 5, marginTop: verticalScale(20) }}>
+        <View style={{ gap: 5, marginTop: spacingY._20 }}>
           <Typo size={30} fontWeight={"800"}>
-            Let's
+            Hey,
           </Typo>
           <Typo size={30} fontWeight={"800"}>
-            Get Started
+            Welcome Back
           </Typo>
         </View>
 
         {/* form */}
         <View style={styles.form}>
           <Typo size={16} color={colors.textLighter}>
-            Create an account to track your expenses
+            Login now to track all your expenses
           </Typo>
-          <Input
-            icon={
-              <Icons.User
-                size={verticalScale(26)}
-                color={colors.neutral300}
-                weight="fill"
-              />
-            }
-            placeholder="Enter your name"
-            onChangeText={(value) => (nameRef.current = value)}
-          />
           <Input
             icon={
               <Icons.At
@@ -102,23 +83,23 @@ const SignUp = () => {
             secureTextEntry
             onChangeText={(value) => (passwordRef.current = value)}
           />
-          {/* <Typo size={14} color={colors.text} style={{ alignSelf: "flex-end" }}>
+          <Typo size={14} color={colors.text} style={{ alignSelf: "flex-end" }}>
             Forgot Password?
-          </Typo> */}
+          </Typo>
           {/* button */}
           <Button loading={loading} onPress={onSubmit}>
             <Typo fontWeight={"700"} color={colors.black} size={21}>
-              Sign Up
+              Login
             </Typo>
           </Button>
         </View>
 
         {/* footer */}
         <View style={styles.footer}>
-          <Typo size={15}>Already have an account?</Typo>
-          <Pressable onPress={() => router.navigate("/login")}>
+          <Typo size={15}>Dont't have an account?</Typo>
+          <Pressable onPress={() => router.navigate("/(auth)/register")}>
             <Typo size={15} fontWeight={"700"} color={colors.primary}>
-              Login
+              Sign up
             </Typo>
           </Pressable>
         </View>
@@ -127,12 +108,12 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Login;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: verticalScale(30),
+    gap: spacingY._30,
     paddingHorizontal: spacingX._20,
   },
   welcomeText: {
@@ -141,7 +122,7 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   form: {
-    gap: 20,
+    gap: spacingY._20,
   },
   forgotPassword: {
     textAlign: "right",

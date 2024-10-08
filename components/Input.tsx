@@ -15,7 +15,7 @@ const Input = (props: InputProps) => {
           { flex: 1, color: colors.white, fontSize: verticalScale(14) },
           props.inputStyle,
         ]}
-        placeholderTextColor={colors.neutral300}
+        placeholderTextColor={colors.neutral400}
         ref={props.inputRef && props.inputRef}
         {...props}
       />

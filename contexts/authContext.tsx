@@ -5,7 +5,7 @@ import {
   onAuthStateChanged,
   User as FirebaseUser,
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { AuthContextType, UserType } from "@/types";
 import { auth, firestore } from "@/config/firebase";
 import { Router, useRouter, useSegments } from "expo-router";
@@ -17,22 +17,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<UserType>(null);
   const router: Router = useRouter();
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setLoading(false);
+      // console.log("got user in auth state changed: ", firebaseUser);
       if (firebaseUser) {
         setUser({
           uid: firebaseUser.uid,
           email: firebaseUser.email,
           name: firebaseUser?.displayName,
         });
-
+        updateUserData(firebaseUser.uid);
         router.replace("/(tabs)");
       } else {
         setUser(null);
-        router.replace("/");
+        router.replace("/(auth)/welcome");
       }
     });
 
@@ -44,30 +43,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       await signInWithEmailAndPassword(auth, email, password);
       return { success: true };
     } catch (error: any) {
-      return { success: false, msg: error.message };
+      let msg = error.message;
+      if (msg.includes("(auth/invalid-email)")) msg = "Invalid email";
+      if (msg.includes("(auth/invalid-credential)")) msg = "Wrong credentials";
+      return { success: false, msg };
     }
   };
 
   const register = async (email: string, password: string, name: string) => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      let response = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      await setDoc(doc(firestore, "users", response?.user?.uid), {
+        name,
+        email,
+        uid: response?.user?.uid,
+      });
       return { success: true };
     } catch (error: any) {
-      return { success: false, msg: error.message };
+      let msg = error.message;
+
+      if (msg.includes("(auth/invalid-email)")) msg = "Invalid email";
+      if (msg.includes("(auth/email-already-in-use)"))
+        msg = "This email is already in use";
+
+      return { success: false, msg };
     }
   };
 
-  const updateUserData = async (userId: string) => {
+  const updateUserData = async (uid: string) => {
     try {
-      const docRef = doc(firestore, "users", userId);
+      const docRef = doc(firestore, "users", uid);
+      // console.log("updating data for : ", uid);
       const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists() && user) {
-        const userData = docSnap.data();
-        setUser((prevUser) => ({
-          ...prevUser!,
-          ...userData,
-        }));
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const userData: UserType = {
+          uid: data.uid,
+          email: data.email || null,
+          name: data.name || null,
+          image: data.image || null,
+        };
+        // console.log("updated user data: ", userData);
+        setUser({ ...user, ...userData });
       }
     } catch (error) {
       console.error("Error fetching user data: ", error);
@@ -76,7 +98,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const contextValue: AuthContextType = {
     user,
-    loading,
+    setUser,
     login,
     register,
     updateUserData,

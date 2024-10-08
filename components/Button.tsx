@@ -1,4 +1,10 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { Children } from "react";
 import { CustomButtonProps } from "@/types";
 import Loading from "./Loading";
@@ -23,9 +29,9 @@ const Button = ({
     );
   }
   return (
-    <Pressable onPress={onPress} style={[styles.button, buttonStyle]}>
+    <TouchableOpacity onPress={onPress} style={[styles.button, buttonStyle]}>
       {children}
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 

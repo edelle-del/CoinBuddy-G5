@@ -1,34 +1,34 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { verticalScale } from "@/utils/styling";
+import { scale, verticalScale } from "@/utils/styling";
 import * as Icons from "phosphor-react-native";
 import { colors } from "@/constants/theme";
 function CustomTabs({ state, descriptors, navigation }: BottomTabBarProps) {
   const tabbarIcons: any = {
     index: (isFocused: boolean) => (
       <Icons.House
-        size={verticalScale(29)}
+        size={verticalScale(30)}
         weight={isFocused ? "fill" : "regular"}
         color={isFocused ? colors.primary : colors.neutral400}
       />
     ),
-    analytics: (isFocused: boolean) => (
+    statistics: (isFocused: boolean) => (
       <Icons.ChartBar
-        size={verticalScale(29)}
+        size={verticalScale(30)}
         weight={isFocused ? "fill" : "regular"}
         color={isFocused ? colors.primary : colors.neutral400}
       />
     ),
     wallet: (isFocused: boolean) => (
       <Icons.Wallet
-        size={verticalScale(29)}
+        size={verticalScale(30)}
         weight={isFocused ? "fill" : "regular"}
         color={isFocused ? colors.primary : colors.neutral400}
       />
     ),
     profile: (isFocused: boolean) => (
       <Icons.User
-        size={verticalScale(29)}
+        size={verticalScale(30)}
         weight={isFocused ? "fill" : "regular"}
         color={isFocused ? colors.primary : colors.neutral400}
       />
@@ -67,6 +67,7 @@ function CustomTabs({ state, descriptors, navigation }: BottomTabBarProps) {
           });
         };
 
+        // console.log("route.name: ", route.name);
         return (
           <TouchableOpacity
             key={route.name}
@@ -78,7 +79,7 @@ function CustomTabs({ state, descriptors, navigation }: BottomTabBarProps) {
             onLongPress={onLongPress}
             style={styles.tabbarItem}
           >
-            {tabbarIcons[route.name](isFocused)}
+            {tabbarIcons[route.name] && tabbarIcons[route.name](isFocused)}
           </TouchableOpacity>
         );
       })}
@@ -91,6 +92,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     height: verticalScale(70),
+    // paddingHorizontal: scale(10),
     backgroundColor: colors.neutral800,
     justifyContent: "space-around",
     alignItems: "center",

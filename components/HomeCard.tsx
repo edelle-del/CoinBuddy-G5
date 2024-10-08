@@ -57,7 +57,7 @@ const HomeCard = () => {
           <View style={{ gap: verticalScale(5) }}>
             <View style={styles.incomeExpense}>
               <View style={styles.statsIcon}>
-                <Icons.ArrowDown
+                <Icons.ArrowUp
                   size={verticalScale(15)}
                   color={colors.black}
                   weight="bold"
@@ -87,7 +87,8 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   container: {
-    padding: scale(19),
+    padding: scale(20),
+    paddingHorizontal: scale(23),
     height: "87%",
     width: "100%",
     justifyContent: "space-between",

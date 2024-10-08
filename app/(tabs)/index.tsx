@@ -1,16 +1,24 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
 import { StatusBar } from "expo-status-bar";
-import { colors, radius, spacingX } from "@/constants/theme";
+import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import * as Icons from "phosphor-react-native";
 import { scale, verticalScale } from "@/utils/styling";
 import HomeCard from "@/components/HomeCard";
 import Button from "@/components/Button";
 import { signOut } from "firebase/auth";
 import { auth } from "@/config/firebase";
+import { useAuth } from "@/contexts/authContext";
+import { Router, useRouter } from "expo-router";
 const Home = () => {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  const logout = async () => {
+    await signOut(auth);
+  };
   return (
     <ScreenWrapper>
       <View style={styles.container}>
@@ -21,7 +29,7 @@ const Home = () => {
               Hello,
             </Typo>
             <Typo fontWeight={"500"} size={20}>
-              Syed Noman
+              {user?.name || ""}
             </Typo>
           </View>
           <View style={styles.bell}>
@@ -29,13 +37,25 @@ const Home = () => {
           </View>
         </View>
 
-        {/* card */}
-        <View style={{ marginTop: 20 }}>
-          <HomeCard />
-        </View>
+        <ScrollView contentContainerStyle={styles.scrollViewStyle}>
+          {/* card */}
+          <View>
+            <HomeCard />
+          </View>
 
-        <Button onPress={async () => await signOut(auth)}>
-          <Typo color={colors.black}>Logout</Typo>
+          {/* <Button onPress={logout}>
+            <Typo color={colors.black}>Logout</Typo>
+          </Button> */}
+        </ScrollView>
+        <Button
+          onPress={() => router.push("/(modals)/transactionModal")}
+          buttonStyle={styles.floatingButton}
+        >
+          <Icons.Plus
+            color={colors.black}
+            weight="bold"
+            size={verticalScale(24)}
+          />
         </Button>
       </View>
     </ScreenWrapper>
@@ -54,10 +74,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: spacingY._10,
   },
   bell: {
     backgroundColor: colors.neutral700,
-    padding: 10,
+    padding: spacingX._10,
     borderRadius: 50,
+  },
+  floatingButton: {
+    height: verticalScale(50),
+    width: verticalScale(50),
+    borderRadius: 100,
+    position: "absolute",
+    bottom: 30,
+    right: 30,
+  },
+
+  scrollViewStyle: {
+    flex: 1,
+    marginTop: spacingY._10,
   },
 });

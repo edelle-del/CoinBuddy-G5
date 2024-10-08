@@ -7,7 +7,7 @@ import { StatusBar } from "expo-status-bar";
 const { height } = Dimensions.get("window");
 
 const ScreenWrapper = ({ style, children }: ScreenWrapperProps) => {
-  let paddingTop = Platform.OS === "ios" ? height * 0.06 : 45;
+  let paddingTop = Platform.OS === "ios" ? height * 0.06 : 50;
   return (
     <View
       style={[
@@ -22,5 +22,3 @@ const ScreenWrapper = ({ style, children }: ScreenWrapperProps) => {
 };
 
 export default ScreenWrapper;
-
-const styles = StyleSheet.create({});

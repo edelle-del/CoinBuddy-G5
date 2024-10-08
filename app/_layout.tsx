@@ -1,29 +1,69 @@
-import { AuthProvider } from "@/contexts/authContext";
+import { auth } from "@/config/firebase";
+import { AuthProvider, useAuth } from "@/contexts/authContext";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useEffect, useState } from "react";
 import "react-native-reanimated";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 function StackLayout() {
-  const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-  });
+  const router = useRouter();
+  const { setUser, updateUserData } = useAuth();
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+  // const [loaded] = useFonts({
+  //   SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+  // });
 
-  if (!loaded) {
-    return null;
-  }
+  // useEffect(() => {
+  //   if (loaded) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [loaded]);
 
-  return <Stack screenOptions={{ headerShown: false }}></Stack>;
+  // useEffect(() => {
+  //   logout();
+  // }, []);
+
+  // const logout = async () => {
+  //   await signOut(auth);
+  // };
+
+  // if (!loaded) {
+  //   return null;
+  // }
+
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen
+        name="(modals)/transactionModal"
+        options={{
+          presentation: "modal",
+        }}
+      />
+      <Stack.Screen
+        name="(modals)/walletModal"
+        options={{
+          presentation: "modal",
+        }}
+      />
+      <Stack.Screen
+        name="(modals)/categoryModal"
+        options={{
+          presentation: "modal",
+        }}
+      />
+      <Stack.Screen
+        name="(modals)/profileModal"
+        options={{
+          presentation: "modal",
+        }}
+      />
+    </Stack>
+  );
 }
 
 export default function RootLayout() {

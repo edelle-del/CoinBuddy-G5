@@ -27,14 +27,17 @@ import { useAuth } from "@/contexts/authContext";
 import { orderBy, where } from "firebase/firestore";
 import ImageUpload from "@/components/ImageUpload";
 import { expenseCategories, transactionTypes } from "@/constants/data";
-import { createOrUpdateTransaction } from "@/services/transactionService";
+import {
+  createOrUpdateTransaction,
+  deleteTransaction,
+} from "@/services/transactionService";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 const TransactionModal = () => {
   const { user } = useAuth();
   const router = useRouter();
   type paramType = {
-    id?: string;
+    id: string;
     type: string;
     amount: string; // Note: Keeping it as string since query parameters are strings
     category?: string;
@@ -143,8 +146,40 @@ const TransactionModal = () => {
     }
   };
 
-  const onDeleteClick = () => {
-    console.log("deleting the tr: ", oldTransaction?.id);
+  const showDeleteAlert = () => {
+    Alert.alert(
+      "Confirm",
+      "Are you sure you want to delete this transaction?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel delete"),
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: () => onDeleteTransaction(),
+          style: "destructive",
+        },
+      ]
+    );
+  };
+
+  const onDeleteTransaction = async () => {
+    console.log("deleting the tr: ", oldTransaction);
+    if (oldTransaction) {
+      setLoading(true);
+      let res = await deleteTransaction(
+        oldTransaction?.id,
+        oldTransaction?.walletId
+      );
+      setLoading(false);
+      if (res.success) {
+        router.back();
+      } else {
+        Alert.alert("Transaction", res.msg);
+      }
+    }
   };
 
   // console.log("got item: ", transaction.type);
@@ -369,7 +404,7 @@ const TransactionModal = () => {
               backgroundColor: colors.rose,
               paddingHorizontal: spacingX._15,
             }}
-            onPress={onDeleteClick}
+            onPress={showDeleteAlert}
           >
             <Icons.Trash
               color={colors.white}
@@ -406,7 +441,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     paddingHorizontal: spacingX._20,
-    gap: scale(12),
+    gap: scale(15),
     paddingTop: spacingY._15,
     borderTopColor: colors.neutral700,
     marginBottom: spacingY._5,

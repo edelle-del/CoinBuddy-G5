@@ -1,9 +1,16 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import { HeaderProps } from "@/types";
 import Typo from "./Typo";
 import { colors } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
+const isIos = Platform.OS == "ios";
 
 const Header = ({ title = "", leftIcon, rightIcon, style }: HeaderProps) => {
   return (
@@ -12,7 +19,7 @@ const Header = ({ title = "", leftIcon, rightIcon, style }: HeaderProps) => {
         <Typo
           size={23}
           fontWeight={"600"}
-          style={{ marginTop: verticalScale(5) }}
+          style={{ marginTop: isIos ? verticalScale(5) : 1 }}
         >
           {title}
         </Typo>

@@ -1,12 +1,19 @@
 import { ResponseType, TransactionType, WalletType } from "@/types";
 import { uploadFile } from "./imageService";
-import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { firestore } from "@/config/firebase";
 import { createOrUpdateWallet } from "./walletService";
 
 export const createOrUpdateTransaction = async (
   transactionData: Partial<TransactionType>
-): Promise<ResponseType> => {
+) => {
   try {
     const { id, type, amount, walletId, image } = transactionData;
 
@@ -228,5 +235,60 @@ export const revertAndUpdateWallets = async (
     console.error("Error updating wallets:", error);
     // You can log or handle the error as needed here
     return { success: false, msg: "Could not update the wallet!" };
+  }
+};
+
+export const deleteTransaction = async (
+  transactionId: string,
+  walletId: string
+) => {
+  try {
+    // Step 1: Fetch the transaction to retrieve its details
+    const transactionRef = doc(firestore, "transactions", transactionId);
+    const transactionSnapshot = await getDoc(transactionRef);
+
+    if (!transactionSnapshot.exists()) {
+      return { success: false, msg: "Transaction not found" };
+    }
+
+    const transactionData = transactionSnapshot.data();
+    const transactionType = transactionData?.type;
+    const transactionAmount = Number(transactionData?.amount);
+
+    // Step 2: Fetch the wallet data to update the totalIncome or totalExpenses
+    const walletRef = doc(firestore, "wallets", walletId);
+    const walletSnapshot = await getDoc(walletRef);
+
+    if (!walletSnapshot.exists()) {
+      return { success: false, msg: "Wallet not found" };
+    }
+
+    const walletData = walletSnapshot.data();
+
+    // Determine the field to update based on transaction type
+    const updateType =
+      transactionType === "income" ? "totalIncome" : "totalExpenses";
+    const newWalletAmount =
+      walletData?.amount! -
+      (transactionType === "income" ? transactionAmount : -transactionAmount);
+    const updatedFieldValue = walletData[updateType] - transactionAmount;
+
+    // Step 3: Update the wallet with the new totals
+    await createOrUpdateWallet({
+      id: walletId,
+      amount: newWalletAmount,
+      [updateType]: updatedFieldValue,
+    });
+
+    // Step 4: Delete the transaction from Firestore
+    await deleteDoc(transactionRef);
+
+    return { success: true, msg: "Transaction deleted and wallet updated" };
+  } catch (error) {
+    console.error("Error deleting transaction and updating wallet:", error);
+    return {
+      success: false,
+      msg: "Failed to delete transaction or update wallet",
+    };
   }
 };

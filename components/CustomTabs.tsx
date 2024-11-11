@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+} from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { scale, verticalScale } from "@/utils/styling";
 import * as Icons from "phosphor-react-native";
@@ -91,7 +97,7 @@ const styles = StyleSheet.create({
   tabbar: {
     flexDirection: "row",
     width: "100%",
-    height: verticalScale(70),
+    height: Platform.OS == "ios" ? verticalScale(70) : verticalScale(55),
     // paddingHorizontal: scale(10),
     backgroundColor: colors.neutral800,
     justifyContent: "space-around",
@@ -107,7 +113,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
   },
   tabbarItem: {
-    marginBottom: spacingY._10,
+    marginBottom: Platform.OS == "ios" ? spacingY._10 : spacingY._5,
     justifyContent: "center",
     alignItems: "center",
   },

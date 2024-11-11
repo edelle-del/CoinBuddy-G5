@@ -4,6 +4,8 @@ import { colors, spacingX, spacingY } from "@/constants/theme";
 import { ModalWrapperProps } from "@/types";
 import { StatusBar } from "expo-status-bar";
 
+const isIos = Platform.OS == "ios";
+
 const ModalWrapper = ({
   style,
   children,
@@ -21,8 +23,8 @@ export default ModalWrapper;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: Platform.OS == "ios" ? spacingX._15 : 50,
-    paddingBottom: spacingY._20,
+    paddingTop: isIos ? spacingX._15 : 50,
+    paddingBottom: isIos ? spacingY._20 : spacingY._10,
     flex: 1,
   },
 });

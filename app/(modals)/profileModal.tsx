@@ -1,6 +1,13 @@
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
-import { colors, spacingY } from "@/constants/theme";
+import { colors, spacingX, spacingY } from "@/constants/theme";
 import ModalWrapper from "@/components/ModalWrapper";
 import Header from "@/components/Header";
 import Typo from "@/components/Typo";
@@ -16,6 +23,7 @@ import * as ImagePicker from "expo-image-picker";
 import { getProfileImage } from "@/services/imageService";
 import { updateUser } from "@/services/userService";
 import { useRouter } from "expo-router";
+import BackButton from "@/components/BackButton";
 
 const ProfileModal = () => {
   let [userData, setUserData] = useState<UserDataType>({
@@ -76,11 +84,15 @@ const ProfileModal = () => {
 
   return (
     <ModalWrapper>
-      <Header title={"Update Profile"} />
-
       <View style={styles.container}>
+        <Header
+          title={"Update Profile"}
+          leftIcon={<BackButton />}
+          style={{ marginBottom: spacingY._10 }}
+        />
         {/* form */}
-        <View style={styles.form}>
+        <ScrollView contentContainerStyle={styles.form}>
+          {/* form */}
           <View style={styles.avatarContainer}>
             <Image
               style={styles.avatar}
@@ -105,15 +117,14 @@ const ProfileModal = () => {
               }
             />
           </View>
-        </View>
-
-        <View style={styles.footer}>
-          <Button onPress={onSubmit} loading={loading}>
-            <Typo color={colors.black} fontWeight={"700"} size={18}>
-              Update
-            </Typo>
-          </Button>
-        </View>
+        </ScrollView>
+      </View>
+      <View style={styles.footer}>
+        <Button onPress={onSubmit} style={{ flex: 1 }} loading={loading}>
+          <Typo color={colors.black} fontWeight={"700"} size={18}>
+            Update
+          </Typo>
+        </Button>
       </View>
     </ModalWrapper>
   );
@@ -125,9 +136,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
-    paddingVertical: spacingY._30,
+    paddingHorizontal: spacingY._20,
+    // paddingVertical: spacingY._30,
   },
-  footer: {},
+  footer: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+    paddingHorizontal: spacingX._20,
+    gap: scale(12),
+    paddingTop: spacingY._15,
+    borderTopColor: colors.neutral700,
+    marginBottom: spacingY._5,
+    borderTopWidth: 1,
+  },
   form: {
     gap: spacingY._30,
     marginTop: spacingY._15,

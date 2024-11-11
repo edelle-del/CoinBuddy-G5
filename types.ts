@@ -1,5 +1,7 @@
 import { Href } from "expo-router";
-import React from "react";
+import { Firestore, Timestamp } from "firebase/firestore";
+import { Icon } from "phosphor-react-native";
+import React, { ReactNode } from "react";
 import {
   ActivityIndicator,
   ActivityIndicatorProps,
@@ -7,6 +9,7 @@ import {
   PressableProps,
   TextInput,
   TextInputProps,
+  TextProps,
   TextStyle,
   TouchableOpacityProps,
   ViewStyle,
@@ -35,6 +38,7 @@ export type TypoProps = {
   fontWeight?: TextStyle["fontWeight"];
   children: any | null;
   style?: TextStyle;
+  textProps?: TextProps;
 };
 
 export type IconComponent = React.ComponentType<{
@@ -55,13 +59,48 @@ export type IconProps = {
 
 export type HeaderProps = {
   title?: string;
-  showBackIcon?: boolean;
   style?: ViewStyle;
+  leftIcon?: ReactNode;
+  rightIcon?: ReactNode;
 };
 
 export type BackButtonProps = {
   style?: ViewStyle;
   iconSize?: number;
+};
+
+export type TransactionType = {
+  id?: string;
+  type: string;
+  amount: number;
+  category?: string;
+  date: Date | Timestamp | string;
+  description?: string;
+  image?: any;
+  uid?: string;
+  walletId: string;
+};
+
+export type CategoryType = {
+  label: string;
+  value: string;
+  icon: Icon;
+  bgColor: string;
+};
+export type ExpenseCategoriesType = {
+  [key: string]: CategoryType;
+};
+
+export type TransactionListType = {
+  data: TransactionType[];
+  title: string | undefined;
+  loading: boolean;
+};
+
+export type TransactionItemProps = {
+  item: TransactionType;
+  index: number;
+  handleClick: Function;
 };
 
 export interface InputProps extends TextInputProps {
@@ -74,8 +113,7 @@ export interface InputProps extends TextInputProps {
 }
 
 export interface CustomButtonProps extends TouchableOpacityProps {
-  buttonStyle?: ViewStyle;
-  textStyle?: TypoProps;
+  style?: ViewStyle;
   onPress?: () => void;
   loading?: boolean;
   hasShadow?: boolean;
@@ -128,6 +166,8 @@ export type WalletType = {
   id?: string;
   name: string;
   amount?: number;
+  totalIncome?: number;
+  totalExpenses?: number;
   image: any;
   uid?: string;
   created?: Date;

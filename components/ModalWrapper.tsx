@@ -1,6 +1,6 @@
 import { Platform, StyleSheet, Text, View, Dimensions } from "react-native";
 import React from "react";
-import { colors, spacingX } from "@/constants/theme";
+import { colors, spacingX, spacingY } from "@/constants/theme";
 import { ModalWrapperProps } from "@/types";
 import { StatusBar } from "expo-status-bar";
 
@@ -22,7 +22,7 @@ export default ModalWrapper;
 const styles = StyleSheet.create({
   container: {
     paddingTop: Platform.OS == "ios" ? spacingX._15 : 50,
-    paddingHorizontal: spacingX._20,
+    paddingBottom: spacingY._20,
     flex: 1,
   },
 });

@@ -2,11 +2,10 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { HeaderProps } from "@/types";
 import Typo from "./Typo";
-import BackButton from "./BackButton";
 import { colors } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
 
-const Header = ({ title = "", showBackIcon = true, style }: HeaderProps) => {
+const Header = ({ title = "", leftIcon, rightIcon, style }: HeaderProps) => {
   return (
     <View style={[styles.container, style && style]}>
       {title && (
@@ -18,14 +17,8 @@ const Header = ({ title = "", showBackIcon = true, style }: HeaderProps) => {
           {title}
         </Typo>
       )}
-      {showBackIcon && (
-        <View style={styles.backButton}>
-          <BackButton
-            style={{ backgroundColor: colors.neutral600 }}
-            iconSize={verticalScale(24)}
-          />
-        </View>
-      )}
+      {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
+      {rightIcon && <View style={styles.rightIcon}>{rightIcon}</View>}
     </View>
   );
 };
@@ -36,8 +29,12 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
   },
-  backButton: {
+  leftIcon: {
     position: "absolute",
     left: 0,
+  },
+  rightIcon: {
+    position: "absolute",
+    right: 0,
   },
 });

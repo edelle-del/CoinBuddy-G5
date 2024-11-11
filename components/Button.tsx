@@ -13,7 +13,7 @@ import { colors, radius } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
 
 const Button = ({
-  buttonStyle,
+  style,
   onPress,
   loading = false,
   hasShadow = true,
@@ -21,15 +21,13 @@ const Button = ({
 }: CustomButtonProps) => {
   if (loading) {
     return (
-      <View
-        style={[styles.button, buttonStyle, { backgroundColor: "transparent" }]}
-      >
+      <View style={[styles.button, style, { backgroundColor: "transparent" }]}>
         <Loading />
       </View>
     );
   }
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.button, buttonStyle]}>
+    <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
       {children}
     </TouchableOpacity>
   );

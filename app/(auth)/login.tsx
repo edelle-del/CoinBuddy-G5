@@ -44,7 +44,7 @@ const Login = () => {
     <ScreenWrapper>
       <StatusBar style="light" />
       <View style={styles.container}>
-        <BackButton />
+        <BackButton iconSize={28} />
         {/* welcome */}
         <View style={{ gap: 5, marginTop: spacingY._20 }}>
           <Typo size={30} fontWeight={"800"}>

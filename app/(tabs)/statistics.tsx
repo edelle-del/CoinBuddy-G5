@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
@@ -7,6 +7,8 @@ import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import Loading from "@/components/Loading";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import { scale, verticalScale } from "@/utils/styling";
+import Header from "@/components/Header";
+import * as Icons from "phosphor-react-native";
 
 const barData = [
   {
@@ -88,7 +90,19 @@ const Analytics = () => {
     <ScreenWrapper>
       <View style={styles.container}>
         {/* segments */}
-
+        <View style={styles.header}>
+          <Header
+            title="Statistics"
+            rightIcon={
+              <TouchableOpacity style={styles.searchIcon}>
+                <Icons.MagnifyingGlass
+                  size={verticalScale(22)}
+                  color={colors.white}
+                />
+              </TouchableOpacity>
+            }
+          />
+        </View>
         <SegmentedControl
           values={["Weekly", "Monthly", "Yearly"]}
           selectedIndex={activeIndex}
@@ -154,6 +168,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: spacingY._20,
   },
+  header: {},
+  searchIcon: {
+    backgroundColor: colors.neutral700,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 100,
+    height: verticalScale(35),
+    width: verticalScale(35),
+    borderCurve: "continuous",
+  },
   segmentStyle: {
     height: scale(37),
     marginBottom: verticalScale(30),
@@ -164,6 +188,8 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   container: {
-    padding: spacingX._20,
+    paddingHorizontal: spacingX._20,
+    paddingVertical: spacingY._5,
+    gap: spacingY._15,
   },
 });

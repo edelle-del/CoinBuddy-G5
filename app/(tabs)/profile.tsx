@@ -1,4 +1,5 @@
 import {
+  Alert,
   Pressable,
   StyleSheet,
   Text,
@@ -88,17 +89,35 @@ const Profile = () => {
     },
   ];
 
+  const handleLogout = async () => {
+    await signOut(auth);
+  };
+
+  const showLogoutAlert = () => {
+    Alert.alert("Confirm", "Are you sure you want to logout?", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel delete"),
+        style: "cancel",
+      },
+      {
+        text: "Logout",
+        onPress: () => handleLogout(),
+        style: "destructive",
+      },
+    ]);
+  };
+
   const handlePress = async (item: accountOptionType) => {
     if (item?.title == "Logout") {
-      await signOut(auth);
-      return;
+      showLogoutAlert();
     }
     if (item?.routeName) router.push(item?.routeName);
   };
   return (
     <ScreenWrapper>
       <View style={styles.container}>
-        <Header title={"Profile"} showBackIcon={false} />
+        <Header title={"Profile"} />
         <View style={styles.userInfo}>
           {/* avatar */}
           <View>
@@ -119,7 +138,7 @@ const Profile = () => {
           {/* name, email */}
           <View style={styles.nameContainer}>
             <Typo size={24} fontWeight={"600"} color={colors.neutral100}>
-              {user?.name}
+              {user?.name || " "}
             </Typo>
             <Typo size={15} color={colors.neutral400}>
               {user?.email}
@@ -133,7 +152,7 @@ const Profile = () => {
             return (
               <Animated.View
                 key={index.toString()}
-                entering={FadeInDown.delay(index * 100)
+                entering={FadeInDown.delay(index * 50)
                   .springify()
                   .damping(14)}
                 style={styles.listItem}

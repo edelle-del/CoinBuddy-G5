@@ -12,9 +12,27 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/config/firebase";
 import { useAuth } from "@/contexts/authContext";
 import { Router, useRouter } from "expo-router";
+import TransactionList from "@/components/TransactionList";
+import { limit, orderBy, where } from "firebase/firestore";
+import useFetchData from "@/hooks/useFetchData";
+import { TransactionType } from "@/types";
+
 const Home = () => {
   const { user } = useAuth();
   const router = useRouter();
+
+  const constraints = [
+    where("uid", "==", user?.uid), // Filter by user ID
+    orderBy("date", "desc"), // Order by creation date in descending order
+    limit(50), // Limit the results to 50 transactions
+  ];
+
+  // Use the useFetchData hook with the 'transactions' collection and constraints
+  const {
+    data: recentTransactions,
+    loading: transactionsLoading,
+    error,
+  } = useFetchData<TransactionType>("transactions", constraints);
 
   const logout = async () => {
     await signOut(auth);
@@ -29,7 +47,7 @@ const Home = () => {
               Hello,
             </Typo>
             <Typo fontWeight={"500"} size={20}>
-              {user?.name || ""}
+              {user?.name || " "}
             </Typo>
           </View>
           <View style={styles.bell}>
@@ -37,11 +55,20 @@ const Home = () => {
           </View>
         </View>
 
-        <ScrollView contentContainerStyle={styles.scrollViewStyle}>
+        <ScrollView
+          contentContainerStyle={styles.scrollViewStyle}
+          showsVerticalScrollIndicator={false}
+        >
           {/* card */}
           <View>
             <HomeCard />
           </View>
+
+          <TransactionList
+            title={"Recent Transactions"}
+            loading={transactionsLoading}
+            data={recentTransactions}
+          />
 
           {/* <Button onPress={logout}>
             <Typo color={colors.black}>Logout</Typo>
@@ -49,7 +76,7 @@ const Home = () => {
         </ScrollView>
         <Button
           onPress={() => router.push("/(modals)/transactionModal")}
-          buttonStyle={styles.floatingButton}
+          style={styles.floatingButton}
         >
           <Icons.Plus
             color={colors.black}
@@ -86,12 +113,13 @@ const styles = StyleSheet.create({
     width: verticalScale(50),
     borderRadius: 100,
     position: "absolute",
-    bottom: 30,
-    right: 30,
+    bottom: verticalScale(30),
+    right: verticalScale(30),
   },
 
   scrollViewStyle: {
-    flex: 1,
     marginTop: spacingY._10,
+    paddingBottom: verticalScale(100),
+    gap: spacingY._25,
   },
 });

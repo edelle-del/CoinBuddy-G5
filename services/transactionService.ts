@@ -24,7 +24,7 @@ export const createOrUpdateTransaction = async (
       };
     }
 
-    // Fetch the original transaction if updating
+    // do this while updating: Fetch the original transaction if updating
     if (id) {
       // Fetch the old transaction data
       const oldTransactionSnapshot = await getDoc(

@@ -65,6 +65,7 @@ export const deleteWallet = async (walletId: string): Promise<ResponseType> => {
 
     await deleteDoc(walletRef);
 
+    // implement later, when we are able to create transactions
     deleteTransactionsByWalletId(walletId);
 
     return {

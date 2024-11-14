@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
 import { StatusBar } from "expo-status-bar";
@@ -16,6 +16,7 @@ import TransactionList from "@/components/TransactionList";
 import { limit, orderBy, where } from "firebase/firestore";
 import useFetchData from "@/hooks/useFetchData";
 import { TransactionType } from "@/types";
+import { fetchWeeklyStats } from "@/services/transactionService";
 
 const Home = () => {
   const { user } = useAuth();
@@ -68,6 +69,7 @@ const Home = () => {
             title={"Recent Transactions"}
             loading={transactionsLoading}
             data={recentTransactions}
+            emptyListMessage="No Transactions added yet!"
           />
 
           {/* <Button onPress={logout}>

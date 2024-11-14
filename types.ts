@@ -94,7 +94,8 @@ export type ExpenseCategoriesType = {
 export type TransactionListType = {
   data: TransactionType[];
   title: string | undefined;
-  loading: boolean;
+  loading?: boolean;
+  emptyListMessage?: string;
 };
 
 export type TransactionItemProps = {

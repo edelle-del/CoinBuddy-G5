@@ -14,7 +14,12 @@ import Loading from "./Loading";
 import { Timestamp } from "firebase/firestore";
 import { useRouter } from "expo-router";
 
-const TransactionList = ({ data, title, loading }: TransactionListType) => {
+const TransactionList = ({
+  data,
+  title,
+  loading,
+  emptyListMessage,
+}: TransactionListType) => {
   //   console.log("got data: ", data);
   const router = useRouter();
 
@@ -60,7 +65,7 @@ const TransactionList = ({ data, title, loading }: TransactionListType) => {
           color={colors.neutral400}
           style={{ textAlign: "center", marginTop: spacingY._15 }}
         >
-          No transactions added yet!
+          {emptyListMessage}
         </Typo>
       )}
       {loading && (

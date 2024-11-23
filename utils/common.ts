@@ -1,4 +1,3 @@
-// Helper function to get the past 7 days with day names and default income/expense values
 export const getLast7Days = () => {
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const result = [];
@@ -8,12 +7,13 @@ export const getLast7Days = () => {
     date.setDate(date.getDate() - i);
     result.push({
       day: daysOfWeek[date.getDay()],
-      date: date.toISOString().split("T")[0],
+      date: date.toISOString().split("T")[0], // Mon, Tue, Wed...
       income: 0,
       expense: 0,
     });
   }
-  return result.reverse();
+  return result;
+  //   return result.reverse();
 };
 
 export const getLast12Months = () => {
@@ -39,7 +39,7 @@ export const getLast12Months = () => {
 
     const monthName = monthsOfYear[date.getMonth()];
     const shortYear = date.getFullYear().toString().slice(-2);
-    const formattedMonthYear = `${monthName} ${shortYear}`;
+    const formattedMonthYear = `${monthName} ${shortYear}`; // Jan 24, Feb 25
     const formattedDate = date.toISOString().split("T")[0];
 
     result.push({
@@ -50,7 +50,8 @@ export const getLast12Months = () => {
     });
   }
 
-  return result.reverse();
+  return result;
+  //   return result.reverse();
 };
 
 export const getYearsRange = (startYear: number, endYear: number): any => {
@@ -63,5 +64,6 @@ export const getYearsRange = (startYear: number, endYear: number): any => {
       expense: 0,
     });
   }
-  return result.reverse();
+  return result;
+  //   return result.reverse();
 };

@@ -332,7 +332,7 @@ export const fetchWeeklyStats = async (uid: string): Promise<ResponseType> => {
       const transactionDate = (transaction.date as Timestamp)
         .toDate()
         .toISOString()
-        .split("T")[0];
+        .split("T")[0]; // as Mon, Tue
       const dayData = weeklyData.find((day) => day.date === transactionDate);
 
       if (dayData) {

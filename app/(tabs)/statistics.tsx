@@ -210,7 +210,9 @@ const Analytics = () => {
                 yAxisLabelPrefix="$"
                 xAxisThickness={0}
                 yAxisThickness={0}
-                yAxisLabelWidth={scale(35)}
+                yAxisLabelWidth={
+                  [1, 2].includes(activeIndex) ? scale(38) : scale(35)
+                }
                 // hideYAxisText
                 yAxisTextStyle={{ color: colors.neutral350 }}
                 xAxisLabelTextStyle={{ color: colors.neutral350 }}

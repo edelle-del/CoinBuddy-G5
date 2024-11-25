@@ -31,7 +31,7 @@ const Home = () => {
   const constraints = [
     where("uid", "==", user?.uid), // Filter by user ID
     orderBy("date", "desc"), // Order by creation date in descending order
-    limit(50), // Limit the results to 50 transactions
+    limit(30), // Limit the results to 50 transactions
   ];
 
   // Use the useFetchData hook with the 'transactions' collection and constraints

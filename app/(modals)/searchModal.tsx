@@ -21,17 +21,12 @@ import { useAuth } from "@/contexts/authContext";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { TransactionType, WalletType } from "@/types";
 import BackButton from "@/components/BackButton";
-import * as Icons from "phosphor-react-native";
-import { debounce } from "lodash";
+
 import TransactionList from "@/components/TransactionList";
 import { orderBy, where } from "firebase/firestore";
 import useFetchData from "@/hooks/useFetchData";
 
-const initialMessage = "Search for transactions by category or description.";
-const noTransactionsMessage = "No transactions match your search keywords";
-
 const SearchModal = () => {
-  const [transactions, setTransactions] = useState<TransactionType[]>([]);
   const { user } = useAuth();
   const [search, setSearch] = useState("");
 
@@ -44,13 +39,14 @@ const SearchModal = () => {
     error,
   } = useFetchData<TransactionType>("transactions", constraints);
 
-  const hanldeSearch = (search: string) => {};
-  const handleTextDebounce = useCallback(debounce(hanldeSearch, 400), []);
+  //   const hanldeSearch = (search: string) => {};
+  //   const handleTextDebounce = useCallback(debounce(hanldeSearch, 400), []);
 
   const filteredTransactions = allTransactions.filter((item) => {
     if (search.length > 1) {
       if (
         item?.category?.toLowerCase()?.includes(search?.toLowerCase()) ||
+        item?.type?.toLowerCase()?.includes(search?.toLowerCase()) ||
         item?.description?.toLowerCase()?.includes(search?.toLowerCase())
       ) {
         return true;
@@ -71,7 +67,6 @@ const SearchModal = () => {
         {/* form */}
         <ScrollView contentContainerStyle={styles.form}>
           <View style={styles.inputContainer}>
-            {/* <Typo color={colors.neutral200}>Wallet Name</Typo> */}
             <Input
               placeholder="shoes..."
               value={search}

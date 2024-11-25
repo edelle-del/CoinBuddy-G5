@@ -14,6 +14,7 @@ import Loading from "./Loading";
 import { Timestamp } from "firebase/firestore";
 import { useRouter } from "expo-router";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
+import { FlashList } from "@shopify/flash-list";
 
 const TransactionList = ({
   data,
@@ -50,14 +51,26 @@ const TransactionList = ({
       )}
 
       <View style={styles.list}>
-        {data.map((item, index) => (
+        <FlashList
+          data={data}
+          renderItem={({ item, index }) => (
+            <TransactionItem
+              handleClick={handleClick}
+              item={item}
+              // key={item?.id}
+              index={index}
+            />
+          )}
+          estimatedItemSize={60}
+        />
+        {/* {data.map((item, index) => (
           <TransactionItem
             handleClick={handleClick}
             item={item}
             key={item?.id}
             index={index}
           />
-        ))}
+        ))} */}
       </View>
 
       {!loading && data.length == 0 && (
@@ -144,13 +157,14 @@ const styles = StyleSheet.create({
     // backgroundColor: "red",
   },
   list: {
-    gap: spacingY._15,
+    minHeight: 3,
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     gap: spacingX._12,
+    marginBottom: spacingY._12,
 
     // list with background
     backgroundColor: colors.neutral800,

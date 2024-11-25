@@ -126,7 +126,7 @@ export type ImageUploadProps = {
   onSelect: (file: any) => void;
   onClear: () => void;
   containerStyle?: ViewStyle;
-  imageStyle?: ImageStyle;
+  imageStyle?: ViewStyle;
   placeholder?: string;
 };
 

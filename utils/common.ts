@@ -12,8 +12,8 @@ export const getLast7Days = () => {
       expense: 0,
     });
   }
-  return result;
-  //   return result.reverse();
+  // return result;
+  return result.reverse();
 };
 
 export const getLast12Months = () => {
@@ -50,8 +50,8 @@ export const getLast12Months = () => {
     });
   }
 
-  return result;
-  //   return result.reverse();
+  // return result;
+  return result.reverse();
 };
 
 export const getYearsRange = (startYear: number, endYear: number): any => {
@@ -64,6 +64,6 @@ export const getYearsRange = (startYear: number, endYear: number): any => {
       expense: 0,
     });
   }
-  return result;
-  //   return result.reverse();
+  // return result;
+  return result.reverse();
 };

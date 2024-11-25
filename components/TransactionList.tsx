@@ -13,6 +13,7 @@ import { verticalScale } from "@/utils/styling";
 import Loading from "./Loading";
 import { Timestamp } from "firebase/firestore";
 import { useRouter } from "expo-router";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
 const TransactionList = ({
   data,
@@ -24,7 +25,7 @@ const TransactionList = ({
   const router = useRouter();
 
   const handleClick = (item: TransactionType) => {
-    console.log("opeingin: ", item?.type);
+    console.log("opeingin: ", item.image);
     router.push({
       pathname: "/(modals)/transactionModal",
       params: {
@@ -34,7 +35,7 @@ const TransactionList = ({
         category: item.category,
         date: (item.date as Timestamp)?.toDate()?.toISOString(), // Convert Date to string
         description: item.description,
-        image: item.image,
+        image: item?.image?.replace(/%2F/g, "__SLASH__"),
         uid: item.uid,
         walletId: item.walletId,
       },
@@ -94,37 +95,43 @@ const TransactionItem = ({
   //   console.log("date: ", date);
   // string category.icon will match one of the keys from the Icons object, which is a valid icon component.
   return (
-    <TouchableOpacity style={styles.row} onPress={() => handleClick(item)}>
-      <View style={[styles.icon, { backgroundColor: category.bgColor }]}>
-        {IconComponent && (
-          <IconComponent
-            size={verticalScale(25)}
-            weight="fill"
-            color={colors.white}
-          />
-        )}
-      </View>
+    <Animated.View
+      entering={FadeInDown.delay(index * 50)
+        .springify()
+        .damping(14)}
+    >
+      <TouchableOpacity style={styles.row} onPress={() => handleClick(item)}>
+        <View style={[styles.icon, { backgroundColor: category.bgColor }]}>
+          {IconComponent && (
+            <IconComponent
+              size={verticalScale(25)}
+              weight="fill"
+              color={colors.white}
+            />
+          )}
+        </View>
 
-      <View style={styles.categoryDes}>
-        <Typo size={17}>{category.label}</Typo>
-        <Typo
-          size={12}
-          color={colors.neutral400}
-          textProps={{ numberOfLines: 1 }}
-        >
-          {item?.description}
-        </Typo>
-      </View>
-      <View style={styles.amountDate}>
-        <Typo
-          fontWeight={"500"}
-          color={item?.type == "income" ? colors.primary : colors.rose}
-        >{`${item?.type == "income" ? "+ $" : "- $"}${item?.amount}`}</Typo>
-        <Typo size={13} color={colors.neutral400}>
-          {date}
-        </Typo>
-      </View>
-    </TouchableOpacity>
+        <View style={styles.categoryDes}>
+          <Typo size={17}>{category.label}</Typo>
+          <Typo
+            size={12}
+            color={colors.neutral400}
+            textProps={{ numberOfLines: 1 }}
+          >
+            {item?.description}
+          </Typo>
+        </View>
+        <View style={styles.amountDate}>
+          <Typo
+            fontWeight={"500"}
+            color={item?.type == "income" ? colors.primary : colors.rose}
+          >{`${item?.type == "income" ? "+ $" : "- $"}${item?.amount}`}</Typo>
+          <Typo size={13} color={colors.neutral400}>
+            {date}
+          </Typo>
+        </View>
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 

@@ -75,6 +75,7 @@ const TransactionModal = () => {
 
   useEffect(() => {
     if (oldTransaction?.id) {
+      console.log("old tr: ", oldTransaction);
       setTransaction({
         type: oldTransaction.type,
         amount: Number(oldTransaction.amount),
@@ -82,7 +83,9 @@ const TransactionModal = () => {
         category: oldTransaction.category || "",
         date: new Date(oldTransaction.date), // Convert string to Date object
         walletId: oldTransaction.walletId,
-        image: oldTransaction.image || null,
+        image: oldTransaction?.image
+          ? oldTransaction.image.replace(/__SLASH__/g, "%2F")
+          : null,
       });
     }
   }, []);
@@ -239,7 +242,7 @@ const TransactionModal = () => {
               itemContainerStyle={styles.dropdownItemContainer}
               iconStyle={styles.dropdownIcon}
               data={wallets.map((wallet) => ({
-                label: wallet?.name,
+                label: `${wallet?.name} ($${wallet.amount})`,
                 value: wallet?.id,
               }))}
               maxHeight={300}

@@ -165,20 +165,20 @@ const Analytics = () => {
         <View style={styles.header}>
           <Header
             title="Statistics"
-            rightIcon={
-              <TouchableOpacity style={styles.searchIcon}>
-                <Icons.MagnifyingGlass
-                  size={verticalScale(22)}
-                  color={colors.white}
-                />
-              </TouchableOpacity>
-            }
+            // rightIcon={
+            //   <TouchableOpacity style={styles.searchIcon}>
+            //     <Icons.MagnifyingGlass
+            //       size={verticalScale(22)}
+            //       color={colors.white}
+            //     />
+            //   </TouchableOpacity>
+            // }
           />
         </View>
         <ScrollView
           contentContainerStyle={{
             gap: spacingY._20,
-            paddingTop: spacingY._15,
+            paddingTop: spacingY._5,
             paddingBottom: verticalScale(100),
           }}
           showsVerticalScrollIndicator={false}
@@ -233,7 +233,11 @@ const Analytics = () => {
 
           {/* transactions */}
           <View>
-            <TransactionList title="Transactions" data={transactions} />
+            <TransactionList
+              title="Transactions"
+              emptyListMessage="No transactions found"
+              data={transactions}
+            />
           </View>
         </ScrollView>
       </View>

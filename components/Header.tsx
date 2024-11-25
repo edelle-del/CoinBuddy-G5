@@ -25,7 +25,7 @@ const Header = ({ title = "", leftIcon, rightIcon, style }: HeaderProps) => {
         </Typo>
       )}
       {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
-      {rightIcon && <View style={styles.rightIcon}>{rightIcon}</View>}
+      {/* {rightIcon && <View style={styles.rightIcon}>{rightIcon}</View>} */}
     </View>
   );
 };

@@ -25,6 +25,8 @@ const WalletListItem = ({
         id: item?.id,
         name: item?.name,
         image: item?.image?.replace(/%2F/g, "__SLASH__"),
+        // for some reason expo router was changing the image url, i tried stringify, uri encoding but nothing worked
+        // so i manually replaced the encoding to slash and then replaced it in the next component
       },
     });
   };

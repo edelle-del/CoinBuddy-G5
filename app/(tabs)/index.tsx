@@ -1,4 +1,10 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect } from "react";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
@@ -51,9 +57,16 @@ const Home = () => {
               {user?.name || " "}
             </Typo>
           </View>
-          <View style={styles.bell}>
-            <Icons.Bell size={verticalScale(22)} color={colors.white} />
-          </View>
+          <TouchableOpacity
+            onPress={() => router.push("/(modals)/searchModal")}
+            style={styles.searchIcon}
+          >
+            <Icons.MagnifyingGlass
+              size={verticalScale(22)}
+              color={colors.neutral200}
+              weight="bold"
+            />
+          </TouchableOpacity>
         </View>
 
         <ScrollView
@@ -105,7 +118,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: spacingY._10,
   },
-  bell: {
+  searchIcon: {
     backgroundColor: colors.neutral700,
     padding: spacingX._10,
     borderRadius: 50,

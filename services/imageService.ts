@@ -1,13 +1,16 @@
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import * as FileSystem from "expo-file-system";
-import { storage } from "@/config/firebase";
 import { ResponseType } from "@/types";
+import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } from "@/constants";
+import axios from "axios";
 
-export const uploadFile = async (
+const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+export const uploadFileToCloudinary = async (
   file: { uri?: string } | string,
   folderName: string
 ): Promise<ResponseType> => {
   try {
+    // Prepare the file data
+
     if (typeof file === "string") {
       return {
         success: true,
@@ -16,31 +19,34 @@ export const uploadFile = async (
     }
 
     if (file && file.uri) {
-      const response = await fetch(file.uri);
-      const fileBlob = await response.blob();
+      const formData = new FormData();
+      formData.append("file", {
+        uri: file?.uri,
+        type: "image/jpeg",
+        name: file?.uri?.split("/").pop() || "file.jpg",
+      } as any);
+      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+      formData.append("folder", folderName);
 
-      const fileName = file.uri.split("/").pop();
-      const storageRef = ref(storage, `${folderName}/${fileName}`);
+      const response = await axios.post(CLOUDINARY_UPLOAD_URL, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-      await uploadBytesResumable(storageRef, fileBlob);
-
-      const downloadURL = await getDownloadURL(storageRef);
-
+      // Return the success response
       return {
         success: true,
-        data: downloadURL,
+        data: response.data.secure_url,
       };
+    } else {
+      return { success: false, msg: "Invalid file" };
     }
-
-    return {
-      success: false,
-      msg: "Invalid file format",
-    };
   } catch (error: any) {
-    console.error("File upload failed:", error);
+    console.error("Error during file upload:", error);
     return {
       success: false,
-      msg: error.message,
+      msg: error?.message || "Could not uplaod media",
     };
   }
 };

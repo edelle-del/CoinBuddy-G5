@@ -83,9 +83,7 @@ const TransactionModal = () => {
         category: oldTransaction.category || "",
         date: new Date(oldTransaction.date), // Convert string to Date object
         walletId: oldTransaction.walletId,
-        image: oldTransaction?.image
-          ? oldTransaction.image.replace(/__SLASH__/g, "%2F")
-          : null,
+        image: oldTransaction?.image || null,
       });
     }
   }, []);

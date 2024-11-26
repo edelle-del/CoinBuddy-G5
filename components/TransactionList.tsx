@@ -36,7 +36,7 @@ const TransactionList = ({
         category: item.category,
         date: (item.date as Timestamp)?.toDate()?.toISOString(), // Convert Date to string
         description: item.description,
-        image: item?.image?.replace(/%2F/g, "__SLASH__"),
+        image: item?.image,
         uid: item.uid,
         walletId: item.walletId,
       },

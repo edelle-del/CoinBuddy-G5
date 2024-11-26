@@ -1,5 +1,5 @@
 import { ResponseType, TransactionType, WalletType } from "@/types";
-import { uploadFile } from "./imageService";
+import { uploadFileToCloudinary } from "./imageService";
 import {
   collection,
   deleteDoc,
@@ -68,7 +68,10 @@ export const createOrUpdateTransaction = async (
 
     // Upload image if provided
     if (image) {
-      const imageUploadResponse = await uploadFile(image, "transactions");
+      const imageUploadResponse = await uploadFileToCloudinary(
+        image,
+        "transactions"
+      );
       if (!imageUploadResponse.success) {
         return {
           success: false,

@@ -39,9 +39,7 @@ const WalletModal = () => {
     if (oldWallet?.id) {
       setWallet({
         name: oldWallet.name,
-        image: oldWallet?.image
-          ? oldWallet.image.replace(/__SLASH__/g, "%2F")
-          : null,
+        image: oldWallet?.image || null,
       });
       // image issue: tried stringify, encodingURIComponent and then decoding it but nothing worked, so i just manually replaced these string... and it worked
     }

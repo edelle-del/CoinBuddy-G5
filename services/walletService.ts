@@ -8,7 +8,7 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { collection } from "firebase/firestore";
-import { uploadFile } from "./imageService";
+import { uploadFileToCloudinary } from "./imageService";
 import { ResponseType, WalletType } from "@/types";
 import { firestore } from "@/config/firebase";
 
@@ -21,7 +21,10 @@ export const createOrUpdateWallet = async (
     let walletToSave = { ...walletData };
 
     if (walletData.image) {
-      const imageUploadResponse = await uploadFile(walletData.image, "wallets");
+      const imageUploadResponse = await uploadFileToCloudinary(
+        walletData.image,
+        "wallets"
+      );
 
       if (!imageUploadResponse.success) {
         return {

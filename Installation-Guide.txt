@@ -25,3 +25,7 @@ thats it, now install the dependencies and run the project
 - npm run start
 
 Enjoy 😉
+
+Visit https://codewithnomi.com to get more cool projects 🔥 
+
+follow me on X (twitter): https://x.com/codewithnomi_

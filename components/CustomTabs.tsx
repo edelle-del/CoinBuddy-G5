@@ -80,7 +80,6 @@ function CustomTabs({ state, descriptors, navigation }: BottomTabBarProps) {
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
-            testID={options.tabBarTestID}
             onPress={onPress}
             onLongPress={onLongPress}
             style={styles.tabbarItem}
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
   tabbar: {
     flexDirection: "row",
     width: "100%",
-    height: Platform.OS == "ios" ? verticalScale(70) : verticalScale(55),
+    height: Platform.OS == "ios" ? verticalScale(73) : verticalScale(55),
     // paddingHorizontal: scale(10),
     backgroundColor: colors.neutral800,
     justifyContent: "space-around",

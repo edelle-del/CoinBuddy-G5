@@ -41,7 +41,6 @@ const WalletModal = () => {
         name: oldWallet.name,
         image: oldWallet?.image || null,
       });
-      // image issue: tried stringify, encodingURIComponent and then decoding it but nothing worked, so i just manually replaced these string... and it worked
     }
   }, []);
 

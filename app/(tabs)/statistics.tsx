@@ -201,8 +201,8 @@ const Analytics = () => {
             {chartData.length > 0 ? (
               <BarChart
                 data={chartData}
-                barWidth={activeIndex == 1 ? scale(16) : scale(12)}
-                spacing={activeIndex == 1 ? scale(16) : scale(12)}
+                barWidth={scale(12)}
+                spacing={[1, 2].includes(activeIndex) ? scale(25) : scale(16)}
                 // width={screenWidth - spacingX._30}
                 roundedTop
                 roundedBottom
@@ -215,7 +215,10 @@ const Analytics = () => {
                 }
                 // hideYAxisText
                 yAxisTextStyle={{ color: colors.neutral350 }}
-                xAxisLabelTextStyle={{ color: colors.neutral350 }}
+                xAxisLabelTextStyle={{
+                  color: colors.neutral350,
+                  fontSize: verticalScale(12),
+                }}
                 noOfSections={3}
                 minHeight={5}
                 // maxValue={100}
@@ -280,8 +283,8 @@ const styles = StyleSheet.create({
     height: scale(37),
   },
   segmentFontStyle: {
-    fontSize: verticalScale(12),
-    fontWeight: "700",
+    fontSize: verticalScale(13),
+    fontWeight: "bold",
     color: colors.black,
   },
   container: {

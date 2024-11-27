@@ -428,7 +428,7 @@ export const fetchMonthlyStats = async (uid: string): Promise<ResponseType> => {
         value: month.income,
         label: month.month,
         spacing: scale(4),
-        labelWidth: scale(40),
+        labelWidth: scale(46),
         frontColor: colors.primary, // Income bar color
       },
       {
@@ -507,7 +507,7 @@ export const fetchYearlyStats = async (uid: string): Promise<ResponseType> => {
         value: year.income,
         label: year.year,
         spacing: scale(4),
-        labelWidth: scale(30),
+        labelWidth: scale(35),
         frontColor: colors.primary, // Income bar color
       },
       {

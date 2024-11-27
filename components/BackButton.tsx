@@ -1,21 +1,12 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  View,
-  ViewStyle,
-} from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { Router, useRouter } from "expo-router";
 import { colors, radius } from "@/constants/theme";
 import { CaretLeft } from "phosphor-react-native";
 import { verticalScale } from "@/utils/styling";
 import { BackButtonProps } from "@/types";
-// import Icon from "../assets/__icons";
 
-const BackButton = ({ style, iconSize = 25 }: BackButtonProps) => {
+const BackButton = ({ style, iconSize = 26 }: BackButtonProps) => {
   const router: Router = useRouter();
   return (
     <TouchableOpacity

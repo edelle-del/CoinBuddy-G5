@@ -124,14 +124,14 @@ export const updateWalletForNewTransaction = async (
     // Adjust wallet balance and totals based on the transaction type
     const updatedWalletAmount =
       type === "income"
-        ? walletData.amount! + amount // Add income to wallet balance
-        : walletData.amount! - amount; // Subtract expense from wallet balance
+        ? Number(walletData.amount!) + amount // Add income to wallet balance
+        : Number(walletData.amount!) - amount; // Subtract expense from wallet balance
 
     const updateType = type === "income" ? "totalIncome" : "totalExpenses";
     const updatedTotals =
       type === "income"
-        ? walletData.totalIncome! + amount
-        : walletData.totalExpenses! + amount;
+        ? Number(walletData.totalIncome!) + amount
+        : Number(walletData.totalExpenses!) + amount;
 
     // Update the wallet
     await updateDoc(walletRef, {
@@ -159,27 +159,44 @@ export const revertAndUpdateWallets = async (
     const originalWallet = originalWalletSnapshot.data() as WalletType;
 
     // Fetch the new wallet data
-    const newWalletSnapshot = await getDoc(
+    let newWalletSnapshot = await getDoc(
       doc(firestore, "wallets", newWalletId)
     );
-    const newWallet = newWalletSnapshot.data() as WalletType;
+    let newWallet = newWalletSnapshot.data() as WalletType;
+
+    // console.log("original transaction type: ", oldTransaction?.type);
+    // console.log("original wallet amount: ", originalWallet?.amount);
+    // console.log("original wallet totalIncome: ", originalWallet.totalIncome);
+    // console.log(
+    //   "original wallet totalExpenses: ",
+    //   originalWallet.totalExpenses
+    // );
+    // console.log("--------------------------->");
 
     const revertType =
-      oldTransaction.type === "income" ? "totalIncome" : "totalExpenses";
+      oldTransaction.type == "income" ? "totalIncome" : "totalExpenses";
 
     // Revert the previous transaction's effect on wallet balance and income/expense totals
     // the amount that we need to add or subtract
     const revertIncomeExpense: number =
-      oldTransaction.type === "income"
+      oldTransaction.type == "income"
         ? -Number(oldTransaction.amount!) // Subtract income from wallet balance
         : Number(oldTransaction.amount!); // Add back expense to wallet balance
 
-    const revertedWalletAmount = originalWallet.amount! + revertIncomeExpense;
+    const revertedWalletAmount =
+      Number(originalWallet.amount!) + Number(revertIncomeExpense);
 
     const revertedIncomeExpenseAmount =
-      originalWallet[revertType]! - Number(oldTransaction.amount!);
+      Number(originalWallet[revertType]!) - Number(oldTransaction.amount!);
 
-    console.log("reverted wallet amount: ", revertedWalletAmount);
+    // console.log("new transaction type: ", newTransactionType);
+    // console.log("reverted wallet amount: ", revertedWalletAmount);
+    // console.log(
+    //   "reverted wallet total income/expenses: ",
+    //   revertedIncomeExpenseAmount
+    // );
+    // console.log("revert type: ", revertType);
+    // console.log("------------------------------------>");
 
     // check if the user is trying to conver the income to expense on the same wallet
 
@@ -222,18 +239,31 @@ export const revertAndUpdateWallets = async (
 
     ////////////////////////////////////////////////////////////////////////////
 
+    // the new wallet could be the same wallet and we will need the updated wallet amounts
+    // so we will need to refetch the wallet
+    newWalletSnapshot = await getDoc(doc(firestore, "wallets", newWalletId));
+    newWallet = newWalletSnapshot.data() as WalletType;
+
     // Apply the new transaction to the new wallet
     const updateType =
-      newTransactionType === "income" ? "totalIncome" : "totalExpenses";
+      newTransactionType == "income" ? "totalIncome" : "totalExpenses";
     const updateWalletAmount: number =
-      newTransactionType === "income"
+      newTransactionType == "income"
         ? Number(newTransactionAmount) // Add income to wallet balance
         : -Number(newTransactionAmount); // Subtract expense from wallet balance
 
-    const newWalletAmount = newWallet.amount! + updateWalletAmount;
+    const newWalletAmount = Number(newWallet.amount!) + updateWalletAmount;
 
     const newIncomeExpenseAmount =
-      newWallet[updateType]! + Number(newTransactionAmount);
+      Number(newWallet[updateType]!) + Number(newTransactionAmount);
+
+    // console.log("new transaction type: ", newTransactionType);
+    // console.log("updated wallet amount: ", updateWalletAmount);
+    // console.log(
+    //   "updated wallet total income/expenses: ",
+    //   newIncomeExpenseAmount
+    // );
+    // console.log("update type: ", updateType);
 
     // Update the new wallet
     await createOrUpdateWallet({

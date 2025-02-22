@@ -312,13 +312,18 @@ export const deleteTransaction = async (
     const newWalletAmount =
       walletData?.amount! -
       (transactionType === "income" ? transactionAmount : -transactionAmount);
-    const updatedFieldValue = walletData[updateType] - transactionAmount;
+    const updatedTotals = walletData[updateType] - transactionAmount;
+
+    // if its income and the wallet amount can go below zero
+    if (transactionType == "income" && newWalletAmount < 0) {
+      return { success: false, msg: "You cannot delete this transaction" };
+    }
 
     // Step 3: Update the wallet with the new totals
     await createOrUpdateWallet({
       id: walletId,
       amount: newWalletAmount,
-      [updateType]: updatedFieldValue,
+      [updateType]: updatedTotals,
     });
 
     // Step 4: Delete the transaction from Firestore

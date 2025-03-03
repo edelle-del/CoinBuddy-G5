@@ -47,7 +47,7 @@ const WalletListItem = ({
         <View style={styles.nameContainer}>
           <Typo size={16}>{item.name}</Typo>
           <Typo size={14} color={colors.neutral400}>
-            ${item?.amount?.toFixed(2) || 0}
+          ₱{item?.amount?.toFixed(2) || 0}
           </Typo>
         </View>
 

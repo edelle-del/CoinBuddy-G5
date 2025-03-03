@@ -50,10 +50,10 @@ const Home = () => {
         {/* header */}
         <View style={styles.header}>
           <View style={{ gap: 4 }}>
-            <Typo size={16} color={colors.neutral400}>
+            <Typo size={16} color={colors.neutral900}>
               Hello,
             </Typo>
-            <Typo fontWeight={"500"} size={20}>
+            <Typo fontWeight={"500"} size={20} color={colors.neutral900}>
               {user?.name || " "}
             </Typo>
           </View>
@@ -78,8 +78,8 @@ const Home = () => {
             <HomeCard />
           </View>
 
-          <TransactionList
-            title={"Recent Transactions"}
+          <TransactionList 
+            title ={"Recent Transactions"}
             loading={transactionsLoading}
             data={recentTransactions}
             emptyListMessage="No Transactions added yet!"

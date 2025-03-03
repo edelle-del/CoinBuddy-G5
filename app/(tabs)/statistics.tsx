@@ -207,7 +207,7 @@ const Analytics = () => {
                 roundedTop
                 roundedBottom
                 hideRules
-                yAxisLabelPrefix="$"
+                yAxisLabelPrefix="₱"
                 xAxisThickness={0}
                 yAxisThickness={0}
                 yAxisLabelWidth={

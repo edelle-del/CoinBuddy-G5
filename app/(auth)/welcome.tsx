@@ -23,7 +23,7 @@ const WelcomePage = () => {
             onPress={() => router.push("/(auth)/login")}
             style={styles.loginButton}
           >
-            <Typo fontWeight={"500"}>Sign in</Typo>
+            <Typo fontWeight={"500"}>Log In</Typo>
           </TouchableOpacity>
 
           <Animated.Image
@@ -39,10 +39,10 @@ const WelcomePage = () => {
             entering={FadeInDown.duration(1000).springify().damping(12)}
             style={{ alignItems: "center" }}
           >
-            <Typo size={30} fontWeight={"800"}>
+            <Typo size={30} fontWeight={"800"} color={colors.neutral900}>
               Always take control
             </Typo>
-            <Typo size={30} fontWeight={"800"}>
+            <Typo size={30} fontWeight={"800"} color={colors.neutral900}>
               of your finances
             </Typo>
           </Animated.View>
@@ -53,10 +53,10 @@ const WelcomePage = () => {
               .damping(12)}
             style={{ alignItems: "center", gap: 2 }}
           >
-            <Typo size={17} color={colors.textLighter}>
+            <Typo size={17} color={colors.neutral900}>
               Finances must be arranged to set a better
             </Typo>
-            <Typo size={17} color={colors.textLighter}>
+            <Typo size={17} color={colors.neutral900}>
               lifestyle in future
             </Typo>
           </Animated.View>
@@ -69,7 +69,7 @@ const WelcomePage = () => {
             style={styles.buttonContainer}
           >
             <Button onPress={() => router.push("/(auth)/register")}>
-              <Typo size={22} color={colors.neutral900} fontWeight={"600"}>
+              <Typo size={22} color={colors.white} fontWeight={"600"}>
                 Get Started
               </Typo>
             </Button>
@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     paddingTop: spacingY._7,
+    backgroundColor: colors.green,
   },
   welcomeImage: {
     width: "100%",
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     marginRight: spacingX._20,
   },
   footer: {
-    backgroundColor: colors.neutral900,
+    backgroundColor: colors.neutral100,
     alignItems: "center",
     paddingTop: verticalScale(30),
     paddingBottom: verticalScale(45),

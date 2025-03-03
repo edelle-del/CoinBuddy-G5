@@ -40,17 +40,12 @@ const HomeCard = () => {
         <View>
           {/* total balance */}
           <View style={styles.totalBalanceRow}>
-            <Typo color={colors.neutral800} size={17} fontWeight={"500"}>
+            <Typo color={colors.neutral100} size={17} fontWeight={"500"}>
               Total Balance
             </Typo>
-            <Icons.DotsThreeOutline
-              size={verticalScale(23)}
-              color={colors.black}
-              weight="fill"
-            />
           </View>
-          <Typo color={colors.black} size={30} fontWeight={"bold"}>
-            {/* $ 234.23 */}${" "}
+          <Typo color={colors.white} size={30} fontWeight={"bold"}>
+            {/* ₱ 234.23 */}₱{" "}
             {walletLoading ? "----" : getTotals()?.balance?.toFixed(2)}
           </Typo>
         </View>
@@ -67,13 +62,13 @@ const HomeCard = () => {
                   weight="bold"
                 />
               </View>
-              <Typo size={16} color={colors.neutral700} fontWeight={"500"}>
+              <Typo size={16} color={colors.neutral100} fontWeight={"500"}>
                 Income
               </Typo>
             </View>
             <View style={{ alignSelf: "center" }}>
               <Typo size={17} color={colors.green} fontWeight={"600"}>
-                {/* $ 233.42 */}${" "}
+                {/* ₱ 233.42 */}₱{" "}
                 {walletLoading ? "----" : getTotals()?.income.toFixed(2)}
               </Typo>
             </View>
@@ -89,13 +84,13 @@ const HomeCard = () => {
                   weight="bold"
                 />
               </View>
-              <Typo size={16} color={colors.neutral700} fontWeight={"500"}>
+              <Typo size={16} color={colors.neutral100} fontWeight={"500"}>
                 Expense
               </Typo>
             </View>
             <View style={{ alignSelf: "center" }}>
               <Typo size={17} color={colors.rose} fontWeight={"600"}>
-                {/* $ 534.23 */}${" "}
+                {/* $ 534.23 */}₱{" "}
                 {walletLoading ? "----" : getTotals()?.expenses.toFixed(2)}
               </Typo>
             </View>

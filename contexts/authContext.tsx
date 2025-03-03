@@ -9,6 +9,8 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { AuthContextType, UserType } from "@/types";
 import { auth, firestore } from "@/config/firebase";
 import { Router, useRouter, useSegments } from "expo-router";
+import { sendEmailVerification } from "firebase/auth";
+
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -96,12 +98,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const resendVerificationEmail = async () => {
+    if (auth.currentUser) {
+      try {
+        await sendEmailVerification(auth.currentUser);
+        return { success: true };
+      } catch (error: any) {
+        return { success: false, msg: error.message };
+      }
+    } else {
+      return { success: false, msg: "No authenticated user found." };
+    }
+  };
+
+  const checkEmailVerification = async () => {
+    if (auth.currentUser) {
+      try {
+        await auth.currentUser.reload(); // Refresh user state
+        return { success: true, verified: auth.currentUser.emailVerified };
+      } catch (error: any) {
+        return { success: false, msg: error.message };
+      }
+    } else {
+      return { success: false, msg: "No authenticated user found." };
+    }
+  };
+  
   const contextValue: AuthContextType = {
     user,
     setUser,
     login,
     register,
     updateUserData,
+    resendVerificationEmail,
+    checkEmailVerification,
   };
 
   return (

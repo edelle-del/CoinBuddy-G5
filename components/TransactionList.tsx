@@ -45,7 +45,7 @@ const TransactionList = ({
   return (
     <View style={styles.container}>
       {title && (
-        <Typo fontWeight={"500"} size={20}>
+        <Typo fontWeight={"500"} size={20} color={colors.neutral900}>
           {title}
         </Typo>
       )}
@@ -138,7 +138,7 @@ const TransactionItem = ({
           <Typo
             fontWeight={"500"}
             color={item?.type == "income" ? colors.primary : colors.rose}
-          >{`${item?.type == "income" ? "+ $" : "- $"}${item?.amount}`}</Typo>
+          >{`${item?.type == "income" ? "+ ₱" : "- ₱"}${item?.amount}`}</Typo>
           <Typo size={13} color={colors.neutral400}>
             {date}
           </Typo>

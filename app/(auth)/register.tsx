@@ -23,17 +23,26 @@ const SignUp = () => {
   const router = useRouter();
   const emailRef = useRef("");
   const passwordRef = useRef("");
+  const repeatPasswordRef = useRef("");
   const nameRef = useRef("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const { register } = useAuth();
 
   const onSubmit = async () => {
-    if (!emailRef.current || !passwordRef.current || !nameRef.current) {
-      Alert.alert("Register", "please fill all the fields!");
+    if (!emailRef.current || !passwordRef.current || !nameRef.current || !repeatPasswordRef.current) {
+      Alert.alert("Register", "Please fill all the fields!");
       return;
     }
+    
+    // Check if passwords match
+    if (passwordRef.current !== repeatPasswordRef.current) {
+      Alert.alert("Register", "Passwords do not match!");
+      return;
+    }
+    
     // register api
-
     setLoading(true);
     const res = await register(
       emailRef.current,
@@ -46,32 +55,40 @@ const SignUp = () => {
     }
   };
 
+  const toggleShowPassword = () => {
+    setShowPassword(prev => !prev);
+  };
+
+  const toggleShowRepeatPassword = () => {
+    setShowRepeatPassword(prev => !prev);
+  };
+
   return (
     <ScreenWrapper>
       <StatusBar style="light" />
       <View style={styles.container}>
-        <BackButton iconSize={28} />
+        <BackButton iconSize={28}/>
 
         {/* welcome */}
         <View style={{ gap: 5, marginTop: spacingY._20 }}>
-          <Typo size={30} fontWeight={"800"}>
+          <Typo size={30} fontWeight={"800"} color={colors.neutral900}>
             Let's
           </Typo>
-          <Typo size={30} fontWeight={"800"}>
+          <Typo size={30} fontWeight={"800"} color={colors.neutral900}>
             Get Started
           </Typo>
         </View>
 
         {/* form */}
         <View style={styles.form}>
-          <Typo size={16} color={colors.textLighter}>
+          <Typo size={16} color={colors.neutral900}>
             Create an account to track your expenses
           </Typo>
           <Input
             icon={
               <Icons.User
                 size={verticalScale(26)}
-                color={colors.neutral300}
+                color={colors.neutral900}
                 weight="fill"
               />
             }
@@ -82,31 +99,84 @@ const SignUp = () => {
             icon={
               <Icons.At
                 size={verticalScale(26)}
-                color={colors.neutral300}
+                color={colors.neutral900}
                 weight="fill"
               />
             }
             placeholder="Enter your email"
             onChangeText={(value) => (emailRef.current = value)}
           />
-          <Input
-            icon={
-              <Icons.Lock
-                size={verticalScale(26)}
-                color={colors.neutral300}
-                weight="fill"
-              />
-            }
-            placeholder="Enter your password"
-            secureTextEntry
-            onChangeText={(value) => (passwordRef.current = value)}
-          />
-          {/* <Typo size={14} color={colors.text} style={{ alignSelf: "flex-end" }}>
-            Forgot Password?
-          </Typo> */}
+          <View style={styles.passwordContainer}>
+            <Input
+              icon={
+                <Icons.Lock
+                  size={verticalScale(26)}
+                  color={colors.neutral900}
+                  weight="fill"
+                />
+              }
+              placeholder="Enter your password"
+              secureTextEntry={!showPassword}
+              onChangeText={(value) => (passwordRef.current = value)}
+              style={styles.passwordInput}
+            />
+            <Pressable 
+              style={styles.eyeIcon} 
+              onPress={toggleShowPassword}
+            >
+              {showPassword ? (
+                <Icons.Eye
+                  size={verticalScale(24)}
+                  color={colors.neutral900}
+                  weight="fill"
+                />
+              ) : (
+                <Icons.EyeSlash
+                  size={verticalScale(24)}
+                  color={colors.neutral900}
+                  weight="fill"
+                />
+              )}
+            </Pressable>
+          </View>
+          
+          <View style={styles.passwordContainer}>
+            <Input
+              icon={
+                <Icons.Lock
+                  size={verticalScale(26)}
+                  color={colors.neutral900}
+                  weight="fill"
+                />
+              }
+              placeholder="Confirm your password"
+              secureTextEntry={!showRepeatPassword}
+              onChangeText={(value) => (repeatPasswordRef.current = value)}
+              style={styles.passwordInput}
+            />
+            <Pressable 
+              style={styles.eyeIcon} 
+              onPress={toggleShowRepeatPassword}
+            >
+              {showRepeatPassword ? (
+                <Icons.Eye
+                  size={verticalScale(24)}
+                  color={colors.neutral900}
+                  weight="fill"
+                />
+              ) : (
+                <Icons.EyeSlash
+                  size={verticalScale(24)}
+                  color={colors.neutral900}
+                  weight="fill"
+                />
+              )}
+            </Pressable>
+          </View>
+          
           {/* button */}
           <Button loading={loading} onPress={onSubmit}>
-            <Typo fontWeight={"700"} color={colors.black} size={21}>
+            <Typo fontWeight={"700"} color={colors.white} size={21}>
               Sign Up
             </Typo>
           </Button>
@@ -114,7 +184,7 @@ const SignUp = () => {
 
         {/* footer */}
         <View style={styles.footer}>
-          <Typo size={15}>Already have an account?</Typo>
+          <Typo size={15} color={colors.neutral900}>Already have an account?</Typo>
           <Pressable onPress={() => router.navigate("/(auth)/login")}>
             <Typo size={15} fontWeight={"700"} color={colors.primary}>
               Login
@@ -141,6 +211,19 @@ const styles = StyleSheet.create({
   },
   form: {
     gap: spacingY._20,
+  },
+  passwordContainer: {
+    position: 'relative',
+  },
+  passwordInput: {
+    flex: 1,
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: spacingX._15,
+    top: '50%',
+    transform: [{ translateY: -verticalScale(12) }],
+    zIndex: 1,
   },
   forgotPassword: {
     textAlign: "right",

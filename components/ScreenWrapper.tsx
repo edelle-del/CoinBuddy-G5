@@ -11,7 +11,7 @@ const ScreenWrapper = ({ style, children }: ScreenWrapperProps) => {
   return (
     <View
       style={[
-        { paddingTop, flex: 1, backgroundColor: colors.neutral900 },
+        { paddingTop, flex: 1, backgroundColor: colors.neutral100 },
         style,
       ]}
     >

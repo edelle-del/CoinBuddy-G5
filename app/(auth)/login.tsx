@@ -47,24 +47,24 @@ const Login = () => {
         <BackButton iconSize={28} />
         {/* welcome */}
         <View style={{ gap: 5, marginTop: spacingY._20 }}>
-          <Typo size={30} fontWeight={"800"}>
+          <Typo size={30} fontWeight={"800"} color={colors.neutral900}>
             Hey,
           </Typo>
-          <Typo size={30} fontWeight={"800"}>
+          <Typo size={30} fontWeight={"800"} color={colors.neutral900}>
             Welcome Back
           </Typo>
         </View>
 
         {/* form */}
         <View style={styles.form}>
-          <Typo size={16} color={colors.textLighter}>
+          <Typo size={16} color={colors.neutral900}>
             Login now to track all your expenses
           </Typo>
           <Input
             icon={
               <Icons.At
                 size={verticalScale(26)}
-                color={colors.neutral300}
+                color={colors.neutral900}
                 weight="fill"
               />
             }
@@ -75,7 +75,7 @@ const Login = () => {
             icon={
               <Icons.Lock
                 size={verticalScale(26)}
-                color={colors.neutral300}
+                color={colors.neutral900}
                 weight="fill"
               />
             }
@@ -83,12 +83,12 @@ const Login = () => {
             secureTextEntry
             onChangeText={(value) => (passwordRef.current = value)}
           />
-          <Typo size={14} color={colors.text} style={{ alignSelf: "flex-end" }}>
+          <Typo size={14} color={colors.primary} style={{ alignSelf: "flex-end" }}>
             Forgot Password?
           </Typo>
           {/* button */}
           <Button loading={loading} onPress={onSubmit}>
-            <Typo fontWeight={"700"} color={colors.black} size={21}>
+            <Typo fontWeight={"700"} color={colors.white} size={21}>
               Login
             </Typo>
           </Button>
@@ -96,7 +96,7 @@ const Login = () => {
 
         {/* footer */}
         <View style={styles.footer}>
-          <Typo size={15}>Dont't have an account?</Typo>
+          <Typo size={15} color={colors.neutral900}>Dont't have an account?</Typo>
           <Pressable onPress={() => router.navigate("/(auth)/register")}>
             <Typo size={15} fontWeight={"700"} color={colors.primary}>
               Sign up

@@ -135,6 +135,7 @@ export type UserType = {
   email?: string | null;
   name: string | null;
   image?: any;
+  emailVerified?: boolean;
 } | null;
 
 export type UserDataType = {
@@ -155,6 +156,12 @@ export type AuthContextType = {
     name: string
   ) => Promise<{ success: boolean; msg?: string }>;
   updateUserData: (userId: string) => Promise<void>;
+  resendVerificationEmail: () => Promise<{ success: boolean; msg?: string }>;
+  checkEmailVerification: () => Promise<{ 
+    success: boolean;
+    verified?: boolean;
+    msg?: string;
+  }>;
 };
 
 export type ResponseType = {

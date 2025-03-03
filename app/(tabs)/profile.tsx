@@ -38,6 +38,7 @@ const Profile = () => {
       ),
       routeName: "/(modals)/profileModal",
       bgColor: "#6366f1",
+      
     },
     // {
     //   title: "Exepnse Categories",
@@ -170,7 +171,17 @@ const Profile = () => {
                   >
                     {item.icon && item.icon}
                   </View>
-                  <Typo size={16} style={{ flex: 1 }} fontWeight={"500"}>
+                  <Typo 
+                    size={16} 
+                    style={{ flex: 1 }} 
+                    fontWeight={"500"}
+                    color={
+                      item.title === "Edit Profile" ? colors.neutral900 : 
+                      item.title === "Settings" ? colors.neutral900 :
+                      item.title === "Privacy Policy" ? colors.neutral900 :
+                      item.title === "Logout" ? colors.neutral900 :
+                      undefined
+                    }>
                     {item.title}
                   </Typo>
                   <Icons.CaretRight

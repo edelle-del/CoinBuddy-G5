@@ -273,7 +273,7 @@ const Home = () => {
             emptyListMessage="No Transactions added yet!"
             rightElement={
               <TouchableOpacity
-                onPress={() => router.push("/(modals)/searchModal")}
+                onPress={() => router.push("/(modals)/searchModal" as any)}
               >
                 <Icons.MagnifyingGlass
                   size={verticalScale(22)}
@@ -286,7 +286,7 @@ const Home = () => {
         </ScrollView>
         
         <Button
-          onPress={() => router.push("/(modals)/transactionModal")}
+          onPress={() => router.push("/(modals)/transactionModal" as any)}
           style={styles.floatingButton}
         >
           <Icons.Plus

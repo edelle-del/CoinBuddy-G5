@@ -192,6 +192,7 @@ const TransactionModal = () => {
           title={oldTransaction?.id ? "Update Transaction" : "Add Transaction"}
           leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
+          
         />
 
         {/* form */}
@@ -206,7 +207,7 @@ const TransactionModal = () => {
             </Typo>
             <Dropdown
               style={styles.dropdownContainer}
-              activeColor={colors.neutral900}
+              activeColor={colors.neutral300}
               itemTextStyle={styles.dropdownItemText}
               selectedTextStyle={styles.dropdownSelectedText}
               itemContainerStyle={styles.dropdownItemContainer}
@@ -234,7 +235,7 @@ const TransactionModal = () => {
             </Typo>
             <Dropdown
               style={styles.dropdownContainer}
-              activeColor={colors.neutral700}
+              activeColor={colors.neutral300}
               itemTextStyle={styles.dropdownItemText}
               selectedTextStyle={styles.dropdownSelectedText}
               itemContainerStyle={styles.dropdownItemContainer}
@@ -266,7 +267,7 @@ const TransactionModal = () => {
               </Typo>
               <Dropdown
                 style={styles.dropdownContainer}
-                activeColor={colors.neutral700}
+                activeColor={colors.neutral300}
                 itemTextStyle={styles.dropdownItemText}
                 selectedTextStyle={styles.dropdownSelectedText}
                 itemContainerStyle={styles.dropdownItemContainer}
@@ -416,7 +417,7 @@ const TransactionModal = () => {
         )}
 
         <Button loading={loading} onPress={onSubmit} style={{ flex: 1 }}>
-          <Typo color={colors.black} size={20} fontWeight={"bold"}>
+          <Typo color={colors.white} size={20} fontWeight={"bold"}>
             {oldTransaction?.id ? "Update" : "Submit"}
           </Typo>
         </Button>
@@ -515,7 +516,7 @@ const styles = StyleSheet.create({
   },
   dropdownItemText: { color: colors.neutral900 },
   dropdownSelectedText: {
-    color: colors.white,
+    color: colors.neutral900,
     fontSize: verticalScale(14),
   },
   dropdownListContainer: {

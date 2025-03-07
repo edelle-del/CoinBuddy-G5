@@ -20,14 +20,6 @@ import Typo from "@/components/Typo";
 import * as Icons from "phosphor-react-native";
 import { useAuth } from "@/contexts/authContext";
 
-// Define a proper type for the login response
-interface LoginResponse {
-  success: boolean;
-  msg?: string;
-  needsVerification?: boolean;
-  email?: string;
-}
-
 const Login = () => {
   const router = useRouter();
   const emailRef = useRef("");
@@ -42,20 +34,10 @@ const Login = () => {
       return;
     }
     setLoading(true);
-    // Cast the response to the LoginResponse type
-    const res = await login(emailRef.current, passwordRef.current) as LoginResponse;
+    const res = await login(emailRef.current, passwordRef.current);
     setLoading(false);
-    
     if (!res.success) {
-      if (res.needsVerification) {
-        // Navigate to verification screen if email isn't verified
-        router.push({
-          pathname: "/(auth)/verify",
-          params: { email: res.email }
-        });
-      } else {
-        Alert.alert("Login", res.msg);
-      }
+      Alert.alert("Login", res.msg);
     }
   };
 
@@ -111,4 +93,86 @@ const Login = () => {
             />
             <Pressable
               onPress={togglePasswordVisibility}
-              style={sty
+              style={styles.eyeIconButton}
+            >
+              {showPassword ? (
+                <Icons.Eye
+                  size={verticalScale(22)}
+                  color={colors.neutral700}
+                  weight="fill"
+                />
+              ) : (
+                <Icons.EyeSlash
+                  size={verticalScale(22)}
+                  color={colors.neutral700}
+                  weight="fill"
+                />
+              )}
+            </Pressable>
+          </View>
+          
+          <Typo size={14} color={colors.primary} style={{ alignSelf: "flex-end" }}>
+            Forgot Password?
+          </Typo>
+          
+          {/* button */}
+          <Button loading={loading} onPress={onSubmit}>
+            <Typo fontWeight={"700"} color={colors.white} size={21}>
+              Login
+            </Typo>
+          </Button>
+        </View>
+
+        {/* footer */}
+        <View style={styles.footer}>
+          <Typo size={15} color={colors.neutral900}>Dont't have an account?</Typo>
+          <Pressable onPress={() => router.push("/(auth)/register" as any)}>
+            <Typo size={15} fontWeight={"700"} color={colors.primary}>
+              Sign up
+            </Typo>
+          </Pressable>
+        </View>
+      </View>
+    </ScreenWrapper>
+  );
+};
+
+export default Login;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    gap: spacingY._30,
+    paddingHorizontal: spacingX._20,
+  },
+  welcomeText: {
+    fontSize: verticalScale(20),
+    fontWeight: "bold",
+    color: colors.text,
+  },
+  form: {
+    gap: spacingY._20,
+  },
+  passwordWrapper: {
+    position: "relative",
+  },
+  eyeIconButton: {
+    position: "absolute",
+    right: 10,
+    top: 0,
+    bottom: 0,
+    justifyContent: "center",
+    paddingHorizontal: 8,
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 5,
+  },
+  footerText: {
+    textAlign: "center",
+    color: colors.text,
+    fontSize: verticalScale(15),
+  },
+});

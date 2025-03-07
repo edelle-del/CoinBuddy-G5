@@ -97,6 +97,7 @@ export type TransactionListType = {
   loading?: boolean;
   emptyListMessage?: string;
   rightElement?: React.ReactNode;
+  titleColor?: string;
 };
 
 export type TransactionItemProps = {

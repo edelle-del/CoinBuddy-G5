@@ -22,6 +22,7 @@ const TransactionList = ({
   loading,
   emptyListMessage,
   rightElement,
+  titleColor,
 }: TransactionListType) => {
   //   console.log("got data: ", data);
   const router = useRouter();
@@ -29,7 +30,7 @@ const TransactionList = ({
   const handleClick = (item: TransactionType) => {
     console.log("opeingin: ", item.image);
     router.push({
-      pathname: "/(modals)/transactionModal",
+      pathname: "/(modals)/transactionModal" as any,
       params: {
         id: item.id,
         type: item.type,
@@ -129,10 +130,10 @@ const TransactionItem = ({
         </View>
 
         <View style={styles.categoryDes}>
-          <Typo size={17}>{category.label}</Typo>
+          <Typo size={17} color={colors.black}>{category.label}</Typo>
           <Typo
             size={12}
-            color={colors.neutral400}
+            color={colors.neutral300}
             textProps={{ numberOfLines: 1 }}
           >
             {item?.description}
@@ -143,7 +144,7 @@ const TransactionItem = ({
             fontWeight={"500"}
             color={item?.type == "income" ? colors.primary : colors.rose}
           >{`${item?.type == "income" ? "+ ₱" : "- ₱"}${item?.amount}`}</Typo>
-          <Typo size={13} color={colors.neutral400}>
+          <Typo size={13} color={colors.neutral800}>
             {date}
           </Typo>
         </View>
@@ -171,10 +172,11 @@ const styles = StyleSheet.create({
     marginBottom: spacingY._12,
 
     // list with background
-    backgroundColor: colors.neutral800,
+    backgroundColor: colors.neutral300,
     padding: spacingY._10,
     paddingHorizontal: spacingY._10,
-    borderRadius: radius._17,
+    borderRadius: 20,
+    borderColor: colors.neutral900,
   },
   icon: {
     height: verticalScale(44),

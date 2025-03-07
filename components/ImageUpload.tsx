@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     height: verticalScale(54),
-    backgroundColor: colors.neutral700,
+    backgroundColor: colors.neutral500,
     borderRadius: radius._15,
     flexDirection: "row",
     gap: 10,

@@ -201,12 +201,12 @@ const TransactionModal = () => {
         >
           {/* type */}
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200} size={16} fontWeight={"500"}>
+            <Typo color={colors.neutral900} size={16} fontWeight={"500"}>
               Type
             </Typo>
             <Dropdown
               style={styles.dropdownContainer}
-              activeColor={colors.neutral700}
+              activeColor={colors.neutral900}
               itemTextStyle={styles.dropdownItemText}
               selectedTextStyle={styles.dropdownSelectedText}
               itemContainerStyle={styles.dropdownItemContainer}
@@ -229,7 +229,7 @@ const TransactionModal = () => {
           {/* wallet */}
 
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200} size={16} fontWeight={"500"}>
+            <Typo color={colors.neutral900} size={16} fontWeight={"500"}>
               Wallet
             </Typo>
             <Dropdown
@@ -261,7 +261,7 @@ const TransactionModal = () => {
 
           {transaction.type == "expense" && (
             <View style={styles.inputContainer}>
-              <Typo color={colors.neutral200} size={16} fontWeight={"500"}>
+              <Typo color={colors.neutral900} size={16} fontWeight={"500"}>
                 Expense Cateogry
               </Typo>
               <Dropdown
@@ -292,7 +292,7 @@ const TransactionModal = () => {
 
           {/* date picker */}
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200} size={16} fontWeight={"500"}>
+            <Typo color={colors.neutral900} size={16} fontWeight={"500"}>
               Date
             </Typo>
             {!showDatePicker && (
@@ -300,7 +300,7 @@ const TransactionModal = () => {
                 style={styles.dateInput}
                 onPress={() => setShowDatePicker(true)}
               >
-                <Typo size={14}>
+                <Typo size={14} color={colors.neutral900}>
                   {(transaction?.date as Date)?.toLocaleDateString()}
                 </Typo>
               </Pressable>
@@ -333,7 +333,7 @@ const TransactionModal = () => {
 
           {/* amount */}
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200} size={16}>
+            <Typo color={colors.neutral900} size={16}>
               Amount
             </Typo>
             <Input
@@ -351,7 +351,7 @@ const TransactionModal = () => {
           {/* description */}
           <View style={styles.inputContainer}>
             <View style={styles.flexRow}>
-              <Typo color={colors.neutral200} size={16}>
+              <Typo color={colors.neutral900} size={16}>
                 Description
               </Typo>
               <Typo color={colors.neutral500} size={14}>
@@ -380,7 +380,7 @@ const TransactionModal = () => {
           </View>
           <View style={styles.inputContainer}>
             <View style={styles.flexRow}>
-              <Typo color={colors.neutral200} size={16}>
+              <Typo color={colors.neutral900} size={16}>
                 Receipt
               </Typo>
               <Typo color={colors.neutral500} size={14}>
@@ -431,6 +431,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: spacingY._20,
+    backgroundColor: colors.neutral100,
   },
   form: {
     gap: spacingY._20,
@@ -444,7 +445,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacingX._20,
     gap: scale(12),
     paddingTop: spacingY._15,
-    borderTopColor: colors.neutral700,
+    borderTopColor: colors.neutral900,
     marginBottom: spacingY._5,
     borderTopWidth: 1,
   },
@@ -472,7 +473,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     fontSize: verticalScale(14),
     color: colors.white,
-    borderColor: colors.neutral300,
+    borderColor: colors.neutral900,
     borderRadius: radius._17,
     borderCurve: "continuous",
     // paddingHorizontal: spacingX._15,
@@ -487,7 +488,7 @@ const styles = StyleSheet.create({
     height: verticalScale(54),
     alignItems: "center",
     borderWidth: 1,
-    borderColor: colors.neutral300,
+    borderColor: colors.neutral900,
     borderRadius: radius._17,
     borderCurve: "continuous",
     paddingHorizontal: spacingX._15,
@@ -497,7 +498,7 @@ const styles = StyleSheet.create({
     // backgroundColor: "red",
   },
   datePickerButton: {
-    backgroundColor: colors.neutral700,
+    backgroundColor: colors.neutral900,
     alignSelf: "flex-end",
     padding: spacingY._7,
     marginRight: spacingX._7,
@@ -507,18 +508,18 @@ const styles = StyleSheet.create({
   dropdownContainer: {
     height: verticalScale(54),
     borderWidth: 1,
-    borderColor: colors.neutral300,
+    borderColor: colors.neutral900,
     paddingHorizontal: spacingX._15,
     borderRadius: radius._15,
     borderCurve: "continuous",
   },
-  dropdownItemText: { color: colors.white },
+  dropdownItemText: { color: colors.neutral900 },
   dropdownSelectedText: {
     color: colors.white,
     fontSize: verticalScale(14),
   },
   dropdownListContainer: {
-    backgroundColor: colors.neutral900,
+    backgroundColor: colors.neutral200,
     borderRadius: radius._15,
     borderCurve: "continuous",
     paddingVertical: spacingY._7,
@@ -531,7 +532,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   dropdownPlaceholder: {
-    color: colors.white,
+    color: colors.neutral900,
   },
   dropdownItemContainer: {
     borderRadius: radius._15,
@@ -539,6 +540,6 @@ const styles = StyleSheet.create({
   },
   dropdownIcon: {
     height: verticalScale(30),
-    tintColor: colors.neutral300,
+    tintColor: colors.neutral900,
   },
 });

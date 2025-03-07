@@ -20,11 +20,20 @@ import Typo from "@/components/Typo";
 import * as Icons from "phosphor-react-native";
 import { useAuth } from "@/contexts/authContext";
 
+// Define a proper type for the login response
+interface LoginResponse {
+  success: boolean;
+  msg?: string;
+  needsVerification?: boolean;
+  email?: string;
+}
+
 const Login = () => {
   const router = useRouter();
   const emailRef = useRef("");
   const passwordRef = useRef("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
 
   const onSubmit = async () => {
@@ -33,11 +42,25 @@ const Login = () => {
       return;
     }
     setLoading(true);
-    const res = await login(emailRef.current, passwordRef.current);
+    // Cast the response to the LoginResponse type
+    const res = await login(emailRef.current, passwordRef.current) as LoginResponse;
     setLoading(false);
+    
     if (!res.success) {
-      Alert.alert("Login", res.msg);
+      if (res.needsVerification) {
+        // Navigate to verification screen if email isn't verified
+        router.push({
+          pathname: "/(auth)/verify",
+          params: { email: res.email }
+        });
+      } else {
+        Alert.alert("Login", res.msg);
+      }
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -71,73 +94,21 @@ const Login = () => {
             placeholder="Enter your email"
             onChangeText={(value) => (emailRef.current = value)}
           />
-          <Input
-            icon={
-              <Icons.Lock
-                size={verticalScale(26)}
-                color={colors.neutral900}
-                weight="fill"
-              />
-            }
-            placeholder="Enter your password"
-            secureTextEntry
-            onChangeText={(value) => (passwordRef.current = value)}
-          />
-          <Typo size={14} color={colors.primary} style={{ alignSelf: "flex-end" }}>
-            Forgot Password?
-          </Typo>
-          {/* button */}
-          <Button loading={loading} onPress={onSubmit}>
-            <Typo fontWeight={"700"} color={colors.white} size={21}>
-              Login
-            </Typo>
-          </Button>
-        </View>
-
-        {/* footer */}
-        <View style={styles.footer}>
-          <Typo size={15} color={colors.neutral900}>Dont't have an account?</Typo>
-          <Pressable onPress={() => router.navigate("/(auth)/register")}>
-            <Typo size={15} fontWeight={"700"} color={colors.primary}>
-              Sign up
-            </Typo>
-          </Pressable>
-        </View>
-      </View>
-    </ScreenWrapper>
-  );
-};
-
-export default Login;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    gap: spacingY._30,
-    paddingHorizontal: spacingX._20,
-  },
-  welcomeText: {
-    fontSize: verticalScale(20),
-    fontWeight: "bold",
-    color: colors.text,
-  },
-  form: {
-    gap: spacingY._20,
-  },
-  forgotPassword: {
-    textAlign: "right",
-    fontWeight: "500",
-    color: colors.text,
-  },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 5,
-  },
-  footerText: {
-    textAlign: "center",
-    color: colors.text,
-    fontSize: verticalScale(15),
-  },
-});
+          
+          {/* Custom password input with toggle */}
+          <View style={styles.passwordWrapper}>
+            <Input
+              icon={
+                <Icons.Lock
+                  size={verticalScale(26)}
+                  color={colors.neutral900}
+                  weight="fill"
+                />
+              }
+              placeholder="Enter your password"
+              secureTextEntry={!showPassword}
+              onChangeText={(value) => (passwordRef.current = value)}
+            />
+            <Pressable
+              onPress={togglePasswordVisibility}
+              style={sty

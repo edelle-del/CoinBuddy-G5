@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     height: Platform.OS == "ios" ? verticalScale(73) : verticalScale(55),
     // paddingHorizontal: scale(10),
     backgroundColor: colors.neutral800,
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
     alignItems: "center",
     // shadowColor: colors.white,
     // shadowOffset: {

@@ -21,6 +21,7 @@ const TransactionList = ({
   title,
   loading,
   emptyListMessage,
+  rightElement,
 }: TransactionListType) => {
   //   console.log("got data: ", data);
   const router = useRouter();
@@ -45,10 +46,13 @@ const TransactionList = ({
   return (
     <View style={styles.container}>
       {title && (
-        <Typo fontWeight={"500"} size={20} color={colors.neutral900}>
-          {title}
-        </Typo>
-      )}
+  <View style={styles.headerRow}>
+    <Typo fontWeight={"500"} size={20} color={colors.neutral900}>
+      {title}
+    </Typo>
+    {rightElement}
+  </View>
+)}
 
       <View style={styles.list}>
         <FlashList
@@ -187,5 +191,10 @@ const styles = StyleSheet.create({
   amountDate: {
     alignItems: "flex-end",
     gap: 3,
+  },
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });

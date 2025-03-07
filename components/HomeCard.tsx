@@ -1,6 +1,5 @@
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { scale, verticalScale } from "@/utils/styling";
+import { View, StyleSheet, TouchableOpacity, TextInput, Modal } from "react-native";
+import React, { useState, useEffect } from "react";
 import Typo from "./Typo";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import * as Icons from "phosphor-react-native";
@@ -8,132 +7,334 @@ import useFetchData from "@/hooks/useFetchData";
 import { WalletType } from "@/types";
 import { orderBy, where } from "firebase/firestore";
 import { useAuth } from "@/contexts/authContext";
+
 const HomeCard = () => {
+  const [showMenu, setShowMenu] = useState(false);
+  const [viewIncome, setViewIncome] = useState(false); // Toggle between income and expense
+  const [goalAmount, setGoalAmount] = useState("2000"); // Default goal amount
+  const [goalPeriod, setGoalPeriod] = useState("week"); // Default period (month/week)
+  const [showGoalModal, setShowGoalModal] = useState(false); // Modal for goal editing
+  const [tempGoalAmount, setTempGoalAmount] = useState(""); // Temporary state for editing
+  const [tempGoalPeriod, setTempGoalPeriod] = useState(""); // Temporary state for editing
+
   const { user } = useAuth();
   const {
     data: wallets,
     loading: walletLoading,
-    error,
   } = useFetchData<WalletType>("wallets", [
     where("uid", "==", user?.uid),
     orderBy("created", "desc"),
   ]);
 
+  // Calculate totals and adjust income when expenses are added
   const getTotals = () => {
+    if (!wallets || wallets.length === 0) {
+      return { income: 0, expenses: 0, adjustedIncome: 0 };
+    }
+    
     return wallets.reduce(
-      (totals: any, item: WalletType) => {
-        totals.balance = totals.balance + Number(item.amount);
-        totals.income = totals.income + Number(item.totalIncome);
-        totals.expenses = totals.expenses + Number(item.totalExpenses);
+      (totals, item) => {
+        totals.income += Number(item.totalIncome);
+        totals.expenses += Number(item.totalExpenses);
+        totals.adjustedIncome = totals.income - totals.expenses; // Subtract expenses from income
         return totals;
       },
-      { balance: 0, income: 0, expenses: 0 }
+      { income: 0, expenses: 0, adjustedIncome: 0 }
     );
   };
+
+  // Load the goal settings when the component mounts
+  useEffect(() => {
+    // Here you could load the goal from AsyncStorage or your database
+    // For example:
+    // const loadGoal = async () => {
+    //   const savedGoal = await AsyncStorage.getItem('goalAmount');
+    //   const savedPeriod = await AsyncStorage.getItem('goalPeriod');
+    //   if (savedGoal) setGoalAmount(savedGoal);
+    //   if (savedPeriod) setGoalPeriod(savedPeriod);
+    // };
+    // loadGoal();
+  }, []);
+
+  // Open the goal edit modal with current values
+  const openGoalModal = () => {
+    setTempGoalAmount(goalAmount);
+    setTempGoalPeriod(goalPeriod);
+    setShowGoalModal(true);
+  };
+
+  // Save the new goal settings
+  const saveGoal = () => {
+    setGoalAmount(tempGoalAmount);
+    setGoalPeriod(tempGoalPeriod);
+    setShowGoalModal(false);
+    
+    // Here you could save to AsyncStorage or your database
+    // For example:
+    // AsyncStorage.setItem('goalAmount', tempGoalAmount);
+    // AsyncStorage.setItem('goalPeriod', tempGoalPeriod);
+  };
+
+  const totals = getTotals();
+
   return (
-    <ImageBackground
-      source={require("../assets/images/card.png")}
-      resizeMode="stretch"
-      style={styles.bgImage}
-    >
-      <View style={styles.container}>
-        <View>
-          {/* total balance */}
-          <View style={styles.totalBalanceRow}>
-            <Typo color={colors.neutral100} size={17} fontWeight={"500"}>
-              Total Balance
+    <View style={styles.card}>
+      {/* Three-dot button */}
+      <TouchableOpacity
+        style={styles.menuButton}
+        onPress={() => setShowMenu(!showMenu)}
+      >
+        <Icons.DotsThree size={30} color={colors.white} weight="bold" />
+      </TouchableOpacity>
+
+      {/* Dropdown Menu */}
+      {showMenu && (
+        <View style={styles.dropdownMenu}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => {
+              setViewIncome(!viewIncome);
+              setShowMenu(false);
+            }}
+          >
+            <Typo color={colors.black} size={14} fontWeight="500">
+              {viewIncome ? "View Expense" : "View Income"}
             </Typo>
-          </View>
-          <Typo color={colors.white} size={30} fontWeight={"bold"}>
-            {/* ₱ 234.23 */}₱{" "}
-            {walletLoading ? "----" : getTotals()?.balance?.toFixed(2)}
+          </TouchableOpacity>
+          
+          {!viewIncome && (
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                openGoalModal();
+                setShowMenu(false);
+              }}
+            >
+              <Typo color={colors.black} size={14} fontWeight="500">
+                Set Goal
+              </Typo>
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
+
+      {/* Title: Expense or Income */}
+      <Typo color={colors.white} size={17} fontWeight="500">
+        {viewIncome ? "Remaining Income" : "Expense Total"}
+      </Typo>
+
+      {/* Amount: Expense or Income */}
+      {viewIncome ? (
+        <View>
+          <Typo color={colors.white} size={30} fontWeight="bold">
+            ₱{walletLoading ? "----" : totals.adjustedIncome.toFixed(2)}
+          </Typo>
+          <Typo color={colors.white} size={14}>
+            You've spent ₱{walletLoading ? "----" : totals.expenses.toFixed(2)} this {goalPeriod}
           </Typo>
         </View>
+      ) : (
+        <Typo color={colors.white} size={30} fontWeight="bold">
+          ₱{walletLoading ? "----" : totals.expenses.toFixed(2)}{" "}
+          <Typo size={14} color={colors.white}>
+            /₱{goalAmount} per {goalPeriod}
+          </Typo>
+        </Typo>
+      )}
 
-        {/* expense & income */}
-        <View style={styles.stats}>
-          {/* income */}
-          <View style={{ gap: verticalScale(5) }}>
-            <View style={styles.incomeExpense}>
-              <View style={styles.statsIcon}>
-                <Icons.ArrowDown
-                  size={verticalScale(15)}
-                  color={colors.black}
-                  weight="bold"
-                />
+      {/* Goal Setting Modal */}
+      <Modal
+        visible={showGoalModal}
+        transparent={true}
+        animationType="slide"
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Typo size={18} color={colors.black} fontWeight="bold" style={styles.modalTitle}>
+              Set Budget Goal
+            </Typo>
+            
+            <View style={styles.inputContainer}>
+              <Typo size={14} color={colors.black}>Amount (₱)</Typo>
+              <TextInput
+                style={styles.input}
+                value={tempGoalAmount}
+                onChangeText={setTempGoalAmount}
+                keyboardType="numeric"
+                placeholder="Enter amount"
+              />
+            </View>
+            
+            <View style={styles.periodSelector}>
+              <Typo size={14} color={colors.black}>Period</Typo>
+              <View style={styles.periodOptions}>
+                <TouchableOpacity
+                  style={[
+                    styles.periodOption,
+                    tempGoalPeriod === "week" && styles.periodOptionActive
+                  ]}
+                  onPress={() => setTempGoalPeriod("week")}
+                >
+                  <Typo 
+                    size={14} 
+                    color={tempGoalPeriod === "week" ? colors.white : colors.black}
+                  >
+                    Weekly
+                  </Typo>
+                </TouchableOpacity>
+                
+                <TouchableOpacity
+                  style={[
+                    styles.periodOption,
+                    tempGoalPeriod === "month" && styles.periodOptionActive
+                  ]}
+                  onPress={() => setTempGoalPeriod("month")}
+                >
+                  <Typo 
+                    size={14} 
+                    color={tempGoalPeriod === "month" ? colors.white : colors.black}
+                  >
+                    Monthly
+                  </Typo>
+                </TouchableOpacity>
               </View>
-              <Typo size={16} color={colors.neutral100} fontWeight={"500"}>
-                Income
-              </Typo>
             </View>
-            <View style={{ alignSelf: "center" }}>
-              <Typo size={17} color={colors.green} fontWeight={"600"}>
-                {/* ₱ 233.42 */}₱{" "}
-                {walletLoading ? "----" : getTotals()?.income.toFixed(2)}
-              </Typo>
-            </View>
-          </View>
-
-          {/* expense */}
-          <View style={{ gap: verticalScale(5) }}>
-            <View style={styles.incomeExpense}>
-              <View style={styles.statsIcon}>
-                <Icons.ArrowUp
-                  size={verticalScale(15)}
-                  color={colors.black}
-                  weight="bold"
-                />
-              </View>
-              <Typo size={16} color={colors.neutral100} fontWeight={"500"}>
-                Expense
-              </Typo>
-            </View>
-            <View style={{ alignSelf: "center" }}>
-              <Typo size={17} color={colors.rose} fontWeight={"600"}>
-                {/* $ 534.23 */}₱{" "}
-                {walletLoading ? "----" : getTotals()?.expenses.toFixed(2)}
-              </Typo>
+            
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.cancelButton]}
+                onPress={() => setShowGoalModal(false)}
+              >
+                <Typo size={14} color={colors.black}>Cancel</Typo>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={[styles.modalButton, styles.saveButton]}
+                onPress={saveGoal}
+              >
+                <Typo size={14} color={colors.white}>Save</Typo>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
-      </View>
-    </ImageBackground>
+      </Modal>
+    </View>
   );
 };
 
 export default HomeCard;
 
 const styles = StyleSheet.create({
-  bgImage: {
-    height: scale(210),
-    width: "100%",
-  },
-  container: {
+  card: {
+    width: 348,
+    height: 145,
+    backgroundColor: "#00723F",
+    borderRadius: 20,
     padding: spacingX._20,
-    paddingHorizontal: scale(23),
-    height: "87%",
-    width: "100%",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    position: "relative",
   },
-  totalBalanceRow: {
+  menuButton: {
+    position: "absolute",
+    top: spacingY._10,
+    right: spacingX._10,
+    padding: 5,
+  },
+  dropdownMenu: {
+    position: "absolute",
+    top: spacingY._25,
+    right: spacingX._10,
+    backgroundColor: colors.white,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 10,
+  },
+  menuItem: {
+    padding: spacingX._10,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.neutral300,
+  },
+  changeContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: spacingY._5,
+    marginTop: spacingY._5,
   },
-  stats: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  statsIcon: {
-    backgroundColor: colors.neutral350,
-    padding: spacingY._5,
+  changePill: {
+    backgroundColor: colors.white,
+    paddingHorizontal: spacingX._10,
+    paddingVertical: 3,
     borderRadius: 50,
+    marginRight: spacingX._5,
   },
-  incomeExpense: {
-    flexDirection: "row",
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    gap: spacingY._7,
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    backgroundColor: colors.white,
+    borderRadius: 15,
+    padding: 20,
+    width: "80%",
+    alignItems: "center",
+  },
+  modalTitle: {
+    marginBottom: 20,
+  },
+  inputContainer: {
+    width: "100%",
+    marginBottom: 15,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: colors.neutral300,
+    borderRadius: 8,
+    padding: 10,
+    marginTop: 5,
+    width: "100%",
+  },
+  periodSelector: {
+    width: "100%",
+    marginBottom: 20,
+  },
+  periodOptions: {
+    flexDirection: "row",
+    marginTop: 5,
+  },
+  periodOption: {
+    borderWidth: 1,
+    borderColor: colors.neutral300,
+    borderRadius: 8,
+    padding: 10,
+    marginRight: 10,
+    minWidth: 80,
+    alignItems: "center",
+  },
+  periodOptionActive: {
+    backgroundColor: "#00723F",
+    borderColor: "#00723F",
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  modalButton: {
+    padding: 12,
+    borderRadius: 8,
+    minWidth: 100,
+    alignItems: "center",
+  },
+  cancelButton: {
+    backgroundColor: colors.neutral300,
+    marginRight: 10,
+  },
+  saveButton: {
+    backgroundColor: "#00723F",
   },
 });

@@ -1,128 +1,214 @@
+import React, { createContext, useContext, useEffect, useState } from "react";
 import {
-    Alert,
-    StyleSheet,
-    View,
-    Pressable,
-    ActivityIndicator,
-  } from "react-native";
-  import React, { useState, useEffect } from "react";
-  import ScreenWrapper from "../../components/ScreenWrapper";
-  import { StatusBar } from "expo-status-bar";
-  import { useRouter, useLocalSearchParams } from "expo-router";
-  import BackButton from "@/components/BackButton";
-  import Button from "@/components/Button";
-  import { verticalScale } from "@/utils/styling";
-  import { colors, spacingX, spacingY } from "@/constants/theme";
-  import Typo from "@/components/Typo";
-  import * as Icons from "phosphor-react-native";
-  import { useAuth } from "@/contexts/authContext";
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth, db } from "@/config/firebase";
+import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
+
+const AuthContext = createContext({});
+
+// Generate a random 6-digit verification code
+const generateVerificationCode = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+// Send verification email with code
+const sendVerificationCode = async (email, code) => {
+  // This would typically use a server endpoint or Firebase Cloud Functions
+  // For demo purposes, we'll just log the code and simulate sending
+  console.log(`Verification code ${code} would be sent to ${email}`);
   
-  const VerifyEmail = () => {
-    const router = useRouter();
-    const { email } = useLocalSearchParams();
-    const [loading, setLoading] = useState(false);
-    const [checking, setChecking] = useState(false);
-    const { resendVerificationEmail, checkEmailVerification, user } = useAuth();
+  // In a real app, you would call your backend API here, e.g:
+  // await fetch('https://yourapi.com/send-verification', {
+  //   method: 'POST',
+  //   body: JSON.stringify({ email, code }),
+  //   headers: { 'Content-Type': 'application/json' }
+  // });
   
-    // Function to verify the email
-    const checkVerification = async () => {
-      setChecking(true);
-      const result = await checkEmailVerification();
-      setChecking(false);
-  
-      if (result.success && result.verified) {
-        Alert.alert(
-          "Success",
-          "Your email has been verified successfully!",
-          [{ text: "Continue", onPress: () => router.replace("/(tabs)") }]
-        );
-      } else if (result.success && !result.verified) {
-        Alert.alert(
-          "Not Verified",
-          "Your email is not verified yet. Please check your inbox and click the verification link."
-        );
+  return true;
+};
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loadingInitial, setLoadingInitial] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Check user verification status in Firestore
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists() && userDoc.data().isVerified) {
+          setUser({
+            uid: user.uid,
+            email: user.email,
+            name: userDoc.data().name,
+          });
+        } else {
+          // User exists but not verified
+          setUser(null);
+        }
       } else {
-        Alert.alert("Error", result.msg || "An error occurred while checking verification status.");
+        setUser(null);
       }
-    };
-  
-    // Function to resend verification email
-    const handleResendEmail = async () => {
-      setLoading(true);
-      const result = await resendVerificationEmail();
-      setLoading(false);
-  
-      if (result.success) {
-        Alert.alert("Success", "Verification email has been sent. Please check your inbox.");
-      } else {
-        Alert.alert("Error", result.msg || "Failed to send verification email.");
+      setLoadingInitial(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const login = async (email, password) => {
+    try {
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      
+      // Check if user is verified in Firestore
+      const userDoc = await getDoc(doc(db, "users", response.user.uid));
+      
+      if (!userDoc.exists() || !userDoc.data().isVerified) {
+        return {
+          success: false,
+          msg: "Please verify your email before logging in.",
+          needsVerification: true,
+          email: email
+        };
       }
-    };
-  
-    return (
-      <ScreenWrapper>
-        <StatusBar style="light" />
-        <View style={styles.container}>
-          <BackButton iconSize={28} onPress={() => router.replace("/(auth)/login")} />
-  
-          {/* title */}
-          <View style={{ gap: 5, marginTop: spacingY._20 }}>
-            <Typo size={30} fontWeight={"800"} color={colors.neutral900}>
-              Verify
-            </Typo>
-            <Typo size={30} fontWeight={"800"} color={colors.neutral900}>
-              Your Email
-            </Typo>
-          </View>
-  
-          {/* content */}
-          <View style={styles.content}>
-            <Icons.EnvelopeSimple
-              size={verticalScale(60)}
-              color={colors.primary}
-              weight="fill"
-            />
-            
-            <Typo size={18} color={colors.neutral900} style={styles.message}>
-              We've sent a verification link to:
-            </Typo>
-            
-            <Typo size={18} fontWeight={"700"} color={colors.primary}>
-              {user?.email || email}
-            </Typo>
-            
-            <Typo size={16} color={colors.neutral700} style={styles.instruction}>
-              Please check your email inbox and click on the verification link to confirm your account.
-            </Typo>
-            
-            {/* Check verification button */}
-            <Button loading={checking} onPress={checkVerification} style={styles.button}>
-              <Typo fontWeight={"700"} color={colors.white} size={18}>
-                I've Verified My Email
-              </Typo>
-            </Button>
-            
-            {/* resend email */}
-            <View style={styles.resendContainer}>
-              <Typo size={15} color={colors.neutral900}>
-                Didn't receive the email?
-              </Typo>
-              {loading ? (
-                <ActivityIndicator size="small" color={colors.primary} />
-              ) : (
-                <Pressable onPress={handleResendEmail}>
-                  <Typo size={15} fontWeight={"700"} color={colors.primary}>
-                    Resend Email
-                  </Typo>
-                </Pressable>
-              )}
-            </View>
-          </View>
-        </View>
-      </ScreenWrapper>
-    );
+      
+      return { success: true };
+    } catch (err) {
+      return {
+        success: false,
+        msg: err.message,
+      };
+    }
   };
-  
-  export default VerifyEmail;
-  
-  const styles = StyleSheet.cr
+
+  const register = async (email, password, name) => {
+    try {
+      // Create the user
+      const response = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // Generate verification code
+      const verificationCode = generateVerificationCode();
+      
+      // Store user data in Firestore with verification code
+      await setDoc(doc(db, "users", response.user.uid), {
+        uid: response.user.uid,
+        email,
+        name,
+        isVerified: false,
+        verificationCode,
+        createdAt: new Date(),
+      });
+      
+      // Send verification code to user's email
+      await sendVerificationCode(email, verificationCode);
+      
+      return { success: true, email };
+    } catch (err) {
+      return {
+        success: false,
+        msg: err.message,
+      };
+    }
+  };
+
+  // Function to verify email with code
+  const verifyEmail = async (email, code) => {
+    try {
+      // Find user by email (in a real app, you'd have a better way to look this up)
+      if (!auth.currentUser) {
+        return {
+          success: false,
+          msg: "Please login first",
+        };
+      }
+      
+      const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+      
+      if (!userDoc.exists()) {
+        return {
+          success: false,
+          msg: "User not found",
+        };
+      }
+      
+      // Check verification code
+      if (userDoc.data().verificationCode !== code) {
+        return {
+          success: false,
+          msg: "Invalid verification code",
+        };
+      }
+      
+      // Update user as verified
+      await updateDoc(doc(db, "users", auth.currentUser.uid), {
+        isVerified: true,
+      });
+      
+      // Update local user state
+      setUser({
+        uid: auth.currentUser.uid,
+        email: auth.currentUser.email,
+        name: userDoc.data().name,
+      });
+      
+      return { success: true };
+    } catch (err) {
+      return {
+        success: false,
+        msg: err.message,
+      };
+    }
+  };
+
+  // Function to resend verification code
+  const resendVerificationCode = async (email) => {
+    try {
+      if (!auth.currentUser) {
+        return {
+          success: false,
+          msg: "Please login first",
+        };
+      }
+      
+      // Generate new verification code
+      const verificationCode = generateVerificationCode();
+      
+      // Update the verification code in Firestore
+      await updateDoc(doc(db, "users", auth.currentUser.uid), {
+        verificationCode,
+      });
+      
+      // Send the new verification code
+      await sendVerificationCode(email, verificationCode);
+      
+      return { success: true };
+    } catch (err) {
+      return {
+        success: false,
+        msg: err.message,
+      };
+    }
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        register,
+        verifyEmail,
+        resendVerificationCode,
+        loadingInitial,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+// Custom hook
+export const useAuth = () => {
+  return useContext(AuthContext);
+};

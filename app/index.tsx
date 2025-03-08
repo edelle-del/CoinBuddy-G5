@@ -20,7 +20,7 @@ const SplashScreen = () => {
       <Image
         style={styles.logo}
         resizeMode="contain"
-        source={require("../assets/images/splashImage.png")}
+        source={require("../assets/images/welcome.png")}
       />
       {/* <Text style={styles.title}>Expense Tracker</Text> */}
     </View>
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.neutral900,
+    backgroundColor: colors.primary,
     gap: 20,
   },
   logo: {

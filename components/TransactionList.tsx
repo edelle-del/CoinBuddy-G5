@@ -47,7 +47,7 @@ const TransactionList = ({
   return (
     <View style={styles.container}>
       {title && (
-  <View style={styles.headerRow}>
+  <View style={styles.headerRow}> 
     <Typo fontWeight={"500"} size={20} color={colors.neutral900}>
       {title}
     </Typo>
@@ -81,7 +81,7 @@ const TransactionList = ({
       {!loading && data.length == 0 && (
         <Typo
           size={15}
-          color={colors.neutral400}
+          color={colors.neutral500}
           style={{ textAlign: "center", marginTop: spacingY._15 }}
         >
           {emptyListMessage}
@@ -133,7 +133,7 @@ const TransactionItem = ({
           <Typo size={17} color={colors.black}>{category.label}</Typo>
           <Typo
             size={12}
-            color={colors.neutral300}
+            color={colors.neutral500}
             textProps={{ numberOfLines: 1 }}
           >
             {item?.description}
@@ -172,11 +172,12 @@ const styles = StyleSheet.create({
     marginBottom: spacingY._12,
 
     // list with background
-    backgroundColor: colors.neutral300,
+    backgroundColor: colors.neutral100,
     padding: spacingY._10,
     paddingHorizontal: spacingY._10,
     borderRadius: 20,
-    borderColor: colors.neutral900,
+    borderColor: colors.neutral400,
+    borderWidth: 1,
   },
   icon: {
     height: verticalScale(44),

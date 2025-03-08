@@ -6,6 +6,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
+import CustomTabs from "@/components/CustomTabs";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // SplashScreen.preventAutoHideAsync();

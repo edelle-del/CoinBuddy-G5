@@ -15,28 +15,28 @@ function CustomTabs({ state, descriptors, navigation }: BottomTabBarProps) {
       <Icons.House
         size={verticalScale(30)}
         weight={isFocused ? "fill" : "regular"}
-        color={isFocused ? colors.primary : colors.neutral400}
+        color={isFocused ? colors.primary : colors.neutral700}
       />
     ),
     statistics: (isFocused: boolean) => (
       <Icons.ChartBar
         size={verticalScale(30)}
         weight={isFocused ? "fill" : "regular"}
-        color={isFocused ? colors.primary : colors.neutral400}
+        color={isFocused ? colors.primary : colors.neutral700}
       />
     ),
     wallet: (isFocused: boolean) => (
       <Icons.Wallet
         size={verticalScale(30)}
         weight={isFocused ? "fill" : "regular"}
-        color={isFocused ? colors.primary : colors.neutral400}
+        color={isFocused ? colors.primary : colors.neutral700}
       />
     ),
     profile: (isFocused: boolean) => (
       <Icons.User
         size={verticalScale(30)}
         weight={isFocused ? "fill" : "regular"}
-        color={isFocused ? colors.primary : colors.neutral400}
+        color={isFocused ? colors.primary : colors.neutral700}
       />
     ),
   };
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: Platform.OS == "ios" ? verticalScale(73) : verticalScale(55),
     // paddingHorizontal: scale(10),
-    backgroundColor: colors.neutral900,
+    backgroundColor: colors.neutral100,
     justifyContent: "space-evenly",
     alignItems: "center",
     // shadowColor: colors.white,
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     // },
     // shadowOpacity: 0.5,
     // shadowRadius: 20,
-    borderTopColor: colors.neutral700,
+    borderTopColor: colors.neutral400,
     borderTopWidth: 1,
   },
   tabbarItem: {

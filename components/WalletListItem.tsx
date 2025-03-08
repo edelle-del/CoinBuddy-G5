@@ -20,7 +20,7 @@ const WalletListItem = ({
 }) => {
   const handleOpen = () => {
     router.push({
-      pathname: "/(modals)/walletModal",
+      pathname: "/(modals)/walletModal" as any,
       params: {
         id: item?.id,
         name: item?.name,

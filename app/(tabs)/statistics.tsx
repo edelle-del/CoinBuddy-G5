@@ -186,11 +186,11 @@ const Analytics = () => {
           <SegmentedControl
             values={["Weekly", "Monthly", "Yearly"]}
             selectedIndex={activeIndex}
-            tintColor={colors.neutral200}
-            backgroundColor={colors.neutral800}
+            tintColor={colors.neutral350}
+            backgroundColor={colors.neutral200}
             appearance="dark"
             activeFontStyle={styles.segmentFontStyle}
-            fontStyle={{ ...styles.segmentFontStyle, color: colors.white }}
+            fontStyle={{ ...styles.segmentFontStyle, color: colors.neutral900 }}
             style={styles.segmentStyle}
             onChange={(event) =>
               setActiveIndex(event.nativeEvent.selectedSegmentIndex)
@@ -214,9 +214,9 @@ const Analytics = () => {
                   [1, 2].includes(activeIndex) ? scale(38) : scale(35)
                 }
                 // hideYAxisText
-                yAxisTextStyle={{ color: colors.neutral350 }}
+                yAxisTextStyle={{ color: colors.neutral900 }}
                 xAxisLabelTextStyle={{
-                  color: colors.neutral350,
+                  color: colors.neutral900,
                   fontSize: verticalScale(12),
                 }}
                 noOfSections={3}

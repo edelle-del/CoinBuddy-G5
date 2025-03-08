@@ -61,7 +61,7 @@ const Profile = () => {
           weight="fill"
         />
       ),
-      // routeName: "/(modals)/categoryModal",
+       routeName: "/(modals)/categoryModal",
       bgColor: "#059669",
     },
     {
@@ -73,7 +73,7 @@ const Profile = () => {
           weight="fill"
         />
       ),
-      // routeName: "/(modals)/categoryModal",
+       routeName: "/(modals)/categoryModal",
       bgColor: colors.neutral600,
     },
     {
@@ -138,10 +138,10 @@ const Profile = () => {
 
           {/* name, email */}
           <View style={styles.nameContainer}>
-            <Typo size={24} fontWeight={"600"} color={colors.neutral100}>
+            <Typo size={24} fontWeight={"600"} color={colors.primary}>
               {user?.name || " "}
             </Typo>
-            <Typo size={15} color={colors.neutral400}>
+            <Typo size={15} color={colors.neutral500}>
               {user?.email}
             </Typo>
           </View>

@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     height: Platform.OS == "ios" ? verticalScale(73) : verticalScale(55),
     // paddingHorizontal: scale(10),
     backgroundColor: colors.neutral100,
-    justifyContent: "space-evenly",
+    justifyContent: "space-around",
     alignItems: "center",
     // shadowColor: colors.white,
     // shadowOffset: {
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     // },
     // shadowOpacity: 0.5,
     // shadowRadius: 20,
-    borderTopColor: colors.neutral400,
+    borderTopColor: colors.neutral700,
     borderTopWidth: 1,
   },
   tabbarItem: {

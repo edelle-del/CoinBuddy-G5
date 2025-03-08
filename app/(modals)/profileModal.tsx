@@ -107,7 +107,7 @@ const ProfileModal = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200}>Name</Typo>
+            <Typo color={colors.neutral800}>Name</Typo>
             <Input
               placeholder="Name"
               value={userData.name}
@@ -120,7 +120,7 @@ const ProfileModal = () => {
       </View>
       <View style={styles.footer}>
         <Button onPress={onSubmit} style={{ flex: 1 }} loading={loading}>
-          <Typo color={colors.black} fontWeight={"700"} size={18}>
+          <Typo color={colors.white} fontWeight={"700"} size={18}>
             Update
           </Typo>
         </Button>

@@ -57,7 +57,7 @@ const SearchModal = () => {
   });
 
   return (
-    <ModalWrapper style={{ backgroundColor: colors.neutral900 }}>
+    <ModalWrapper style={{ backgroundColor: colors.neutral100 }}>
       <View style={styles.container}>
         <Header
           title={"Search"}
@@ -70,8 +70,8 @@ const SearchModal = () => {
             <Input
               placeholder="shoes..."
               value={search}
-              placeholderTextColor={colors.neutral400}
-              containerStyle={{ backgroundColor: colors.neutral800 }}
+              placeholderTextColor={colors.neutral500}
+              containerStyle={{ backgroundColor: colors.neutral100 }}
               onChangeText={(value) => setSearch(value)}
             />
           </View>

@@ -45,8 +45,8 @@ const WalletListItem = ({
         </View>
 
         <View style={styles.nameContainer}>
-          <Typo size={16}>{item.name}</Typo>
-          <Typo size={14} color={colors.neutral400}>
+          <Typo size={16} color={colors.neutral900}>{item.name} </Typo>
+          <Typo size={14} color={colors.neutral700}>
           ₱{item?.amount?.toFixed(2) || 0}
           </Typo>
         </View>
@@ -55,7 +55,7 @@ const WalletListItem = ({
         <Icons.CaretRight
           size={verticalScale(20)}
           weight="bold"
-          color={colors.white}
+          color={colors.neutral900}
         />
         {/* </TouchableOpacity> */}
       </TouchableOpacity>
@@ -70,13 +70,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: verticalScale(17),
+    
     // padding: spacingX._15,
   },
   imageContainer: {
     height: verticalScale(45),
     width: verticalScale(45),
     borderWidth: 1,
-    borderColor: colors.neutral600,
+    borderColor: colors.neutral900,
     borderRadius: radius._12,
     borderCurve: "continuous",
     overflow: "hidden",

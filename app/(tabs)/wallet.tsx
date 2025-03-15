@@ -39,15 +39,15 @@ const Wallet = () => {
     }, 0);
 
   return (
-    <ScreenWrapper style={{ backgroundColor: colors.black }}>
+    <ScreenWrapper style={{ backgroundColor: colors.white}}>
       <View style={styles.container}>
         {/* balance view */}
         <View style={styles.balanceView}>
           <View style={{ alignItems: "center" }}>
-            <Typo size={45} fontWeight={"500"}>
+            <Typo size={45} fontWeight={"500"} color={colors.neutral900}>
             ₱{getTotalBalance()?.toFixed(2)}
             </Typo>
-            <Typo size={16} color={colors.neutral300}>
+            <Typo size={16} color={colors.neutral900}>
               Total balance
             </Typo>
           </View>
@@ -57,11 +57,11 @@ const Wallet = () => {
         <View style={styles.wallets}>
           {/* header */}
           <View style={styles.flexRow}>
-            <Typo size={20} fontWeight={"500"}>
+            <Typo size={20} fontWeight={"500"} color={colors.neutral900}>
               My Wallets
             </Typo>
             <TouchableOpacity
-              onPress={() => router.push("/(modals)/walletModal")}
+              onPress={() => router.push("/(modals)/walletModal" as any)}
             >
               <Icons.PlusCircle
                 weight="fill"
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   },
   balanceView: {
     height: verticalScale(160),
-    backgroundColor: colors.black,
+    backgroundColor: colors.white,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
   wallets: {
     flex: 1,
-    backgroundColor: colors.neutral900,
+    backgroundColor: colors.neutral100,
     borderTopRightRadius: radius._30,
 
     borderTopLeftRadius: radius._30,

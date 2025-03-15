@@ -226,7 +226,7 @@ export default HomeCard;
 
 const styles = StyleSheet.create({
   card: {
-    width: 348,
+    width: 400,
     height: 145,
     backgroundColor: "#00723F",
     borderRadius: 20,

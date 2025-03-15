@@ -53,7 +53,7 @@ const WalletModal = () => {
     let { name, image } = wallet;
 
     if (loading) return;
-    if (!name.trim() || !image) {
+    if (!name.trim()) {
       Alert.alert("Wallet", "Please fill all the fields!");
       return;
     }
@@ -121,7 +121,7 @@ const WalletModal = () => {
         {/* form */}
         <ScrollView contentContainerStyle={styles.form}>
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200}>Wallet Name</Typo>
+            <Typo color={colors.neutral900}>Wallet Name</Typo>
             <Input
               placeholder="Salary"
               value={wallet.name}
@@ -129,7 +129,7 @@ const WalletModal = () => {
             />
           </View>
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200}>Wallet Icon</Typo>
+            <Typo color={colors.neutral900}>Wallet Icon</Typo>
             <ImageUpload
               file={wallet.image}
               onSelect={onSelectImage}
@@ -158,7 +158,7 @@ const WalletModal = () => {
           </Button>
         )}
         <Button onPress={onSubmit} loading={loading} style={{ flex: 1 }}>
-          <Typo color={colors.black} fontWeight={"700"} size={18}>
+          <Typo color={colors.white} fontWeight={"700"} size={18}>
             {oldWallet?.id ? "Update Wallet" : "Add Wallet"}
           </Typo>
         </Button>

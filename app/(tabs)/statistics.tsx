@@ -6,6 +6,8 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
+  FlatList,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import ScreenWrapper from "@/components/ScreenWrapper";
@@ -289,7 +291,138 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingHorizontal: spacingX._20,
-    paddingVertical: spacingY._5,
+    paddingVertical: spacingY._7,
     gap: spacingY._10,
+  },
+   // New styles for leaderboard
+   dataTypeSelector: {
+    flexDirection: "row",
+    backgroundColor: colors.neutral200,
+    borderRadius: radius._6,
+    padding: scale(4),
+  },
+  dataTypeButton: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: spacingY._7,
+    borderRadius: radius._6,
+  },
+  activeDataTypeButton: {
+    backgroundColor: colors.white,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  leaderboardContainer: {
+    marginTop: spacingY._7,
+  },
+  leaderboardLoadingContainer: {
+    height: verticalScale(300),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  userRankCard: {
+    backgroundColor: colors.white,
+    borderRadius: radius._12,
+    padding: spacingY._15,
+    marginTop: spacingY._5,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  userRankContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  rankInfoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  rankIcon: {
+    marginRight: spacingX._12,
+  },
+  divider: {
+    width: 1,
+    height: "80%",
+    backgroundColor: colors.neutral300,
+    marginHorizontal: spacingX._10,
+  },
+  outOfText: {
+    textAlign: "right",
+    marginTop: spacingY._5,
+  },
+  sectionTitle: {
+    marginBottom: spacingY._12,
+  },
+  leaderboardListHeader: {
+    flexDirection: "row",
+    paddingVertical: spacingY._5,
+    paddingHorizontal: spacingX._12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.neutral300,
+  },
+  leaderboardItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: spacingY._12,
+    paddingHorizontal: spacingX._12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.neutral200,
+  },
+  currentUserItem: {
+    backgroundColor: colors.primary + "15",
+  },
+  rankContainer: {
+    width: scale(30),
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  medalContainer: {
+    width: scale(24),
+    height: scale(24),
+    borderRadius: scale(12),
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  rankText: {
+    color: colors.neutral600,
+  },
+  userInfoContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: spacingX._10,
+  },
+  avatar: {
+    width: scale(30),
+    height: scale(30),
+    borderRadius: scale(15),
+    marginRight: spacingX._5,
+  },
+  nameText: {
+    flex: 1,
+  },
+  amountText: {
+    color: colors.primary,
+  },
+  emptyLeaderboard: {
+    padding: spacingY._25,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  refreshButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: spacingY._17,
+    paddingVertical: spacingY._7,
   },
 });

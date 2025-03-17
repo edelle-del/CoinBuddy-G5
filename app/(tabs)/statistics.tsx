@@ -149,7 +149,7 @@ const Analytics = () => {
 
   // Add useEffect for leaderboard
   useEffect(() => {
-    fetchLeaderboardData(leaderboardType);
+    fetchLeaderboardData();
   }, [leaderboardType]);
 
   const getWeeklyStats = async () => {
@@ -188,32 +188,37 @@ const Analytics = () => {
     }
   };
 
+  const refreshLeaderboard = () => {
+    fetchLeaderboardData(leaderboardType);
+  };
+
   // Add fetchLeaderboardData function
   const fetchLeaderboardData = async (type: 'savings' | 'xp' = 'savings') => {
     try {
       setLeaderboardLoading(true);
-      // Firestore query to get leaderboard data
-    const leaderboardRef = collection(firestore, "leaderboard"); // or whatever your collection is named
-    const leaderboardQuery = query(
-      leaderboardRef,
+    console.log("Fetching leaderboard data for type:", type); // Add logging
+    const usersRef = collection(firestore, "users");
+    const usersQuery = query(
+      usersRef,
       orderBy(type === 'savings' ? 'amount' : 'xp', 'desc')
     );
     
-    const querySnapshot = await getDocs(leaderboardQuery);
+    const querySnapshot = await getDocs(usersQuery);
+    
     const leaderboardData = querySnapshot.docs.map(doc => {
       const data = doc.data();
       return {
         id: doc.id,
-        name: data.name,
-        amount: data.amount,
-        xp: data.xp,
+        name: data.name || "Anonymous",
+        amount: data.amount || 0,
+        xp: data.xp || 0,
         avatar: data.avatar || null
       };
     });
     
     setLeaderboardData(leaderboardData);
-      
-      // Find user's rank
+    
+    // Find user's rank
     const userIndex = leaderboardData.findIndex(item => item.id === user?.uid);
     setUserRank(userIndex !== -1 ? userIndex + 1 : null);
     setTotalUsers(leaderboardData.length);
@@ -222,6 +227,7 @@ const Analytics = () => {
   } catch (error) {
     console.error("Error fetching leaderboard data:", error);
     setLeaderboardLoading(false);
+    Alert.alert("Error", "Failed to fetch leaderboard data");
   }
 };
 
@@ -260,7 +266,7 @@ const Analytics = () => {
               <Icons.User size={verticalScale(16)} color={colors.neutral600} />
             </View>
           )}
-          <Typo size={14} fontWeight={isCurrentUser ? "bold" : "normal"} style={styles.nameText}>
+          <Typo size={14} fontWeight={isCurrentUser ? "bold" : "normal"} style={styles.nameText} color={colors.neutral900}>
             {item.name}
           </Typo>
         </View>
@@ -352,7 +358,7 @@ const Analytics = () => {
 
           {/* Added Leaderboard Section */}
           <View>
-            <Typo size={16} fontWeight="bold" style={styles.sectionTitle}>
+            <Typo size={16} fontWeight="bold" style={styles.sectionTitle} color={colors.neutral900}>
               Leaderboard
             </Typo>
             
@@ -366,7 +372,7 @@ const Analytics = () => {
                 onPress={() => setLeaderboardType('savings')}
               >
                 <Icons.Wallet size={verticalScale(16)} color={colors.neutral900} style={{ marginRight: 6 }} />
-                <Typo size={14} fontWeight={leaderboardType === 'savings' ? "bold" : "normal"}>
+                <Typo size={14} fontWeight={leaderboardType === 'savings' ? "bold" : "normal"} color={colors.neutral900}>
                   Savings
                 </Typo>
               </TouchableOpacity>
@@ -379,7 +385,7 @@ const Analytics = () => {
                 onPress={() => setLeaderboardType('xp')}
               >
                 <Icons.Star size={verticalScale(16)} color={colors.neutral900} style={{ marginRight: 6 }} />
-                <Typo size={14} fontWeight={leaderboardType === 'xp' ? "bold" : "normal"}>
+                <Typo size={14} fontWeight={leaderboardType === 'xp' ? "bold" : "normal"} color={colors.neutral900}>
                   Experience
                 </Typo>
               </TouchableOpacity>
@@ -394,14 +400,14 @@ const Analytics = () => {
                     <View style={styles.rankIcon}>
                       <Icons.Trophy size={verticalScale(24)} color={colors.primary} weight="fill" />
                     </View>
-                    <Typo size={30} fontWeight="bold">{userRank}</Typo>
+                    <Typo size={30} fontWeight="bold" color={colors.neutral900}>{userRank}</Typo>
                   </View>
                   <View style={styles.divider} />
                   <View style={{ marginLeft: spacingX._10 }}>
                     <Typo size={14} color={colors.neutral700}>
                       {leaderboardType === 'savings' ? 'Total Saved' : 'Total XP'}
                     </Typo>
-                    <Typo size={20} fontWeight="bold">
+                    <Typo size={20} fontWeight="bold" color={colors.neutral900}>
                     {leaderboardType === 'savings' 
                       ? `₱${leaderboardData.find(item => item.id === user?.uid)?.amount?.toLocaleString() || 0}`
                       : `${leaderboardData.find(item => item.id === user?.uid)?.xp?.toLocaleString() || 0} XP`
@@ -449,7 +455,7 @@ const Analytics = () => {
                   </Typo>
                   <TouchableOpacity 
                     style={styles.refreshButton}
-                    onPress={() => fetchLeaderboardData(leaderboardType)}
+                    onPress={refreshLeaderboard}
                   >
                     <Icons.ArrowClockwise size={verticalScale(16)} color={colors.primary} style={{ marginRight: 4 }} />
                     <Typo size={14} color={colors.primary}>Refresh</Typo>

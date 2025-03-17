@@ -100,6 +100,13 @@ const Home = () => {
   },
 ]);
 
+  // Calculate XP based on saved money
+  const calculateMoneyXP = () => {
+    return Math.floor(savedMoney * xpPerPeso);
+  };
+
+  // Total XP is the sum of claimed achievements and money saved
+  const totalXP = userXP + calculateMoneyXP();
 
   const constraints = [
     where("uid", "==", user?.uid), // Filter by user ID
@@ -207,6 +214,12 @@ const Home = () => {
             : a
         )
       );
+
+      // Close the modal to show XP increase (optional - provides better feedback)
+      setShowAchievements(false);
+      
+      // Optionally show XP details after claiming
+      setShowXPDetails(true);
     }
   };
 
@@ -332,10 +345,17 @@ const Home = () => {
               color={colors.neutral900}
               weight="bold"
             />
+            {claimableAchievements.length > 0 && (
+              <View style={styles.notificationBadge}>
+                <Typo size={10} color={colors.white} fontWeight="500">
+                  {claimableAchievements.length}
+                </Typo>
+              </View>
+            )}
           </TouchableOpacity>
         </View>
 
-        {/* XP Progress Bar */}
+        {/* XP Progress Bar - Now passing totalXP */}
         <XPProgressBar 
           savedMoney={savedMoney}
           weeklyGoal={weeklyGoal}
@@ -343,6 +363,7 @@ const Home = () => {
           initialLevel={0}
           showDetails={showXPDetails}
           onPress={() => setShowXPDetails(!showXPDetails)}
+          userXP={totalXP} // Pass the total XP including achievements
         />
 
         <ScrollView
@@ -460,6 +481,19 @@ const styles = StyleSheet.create({
     height: verticalScale(30),
     borderRadius: 15,
     backgroundColor: colors.neutral100,
+  },
+  notificationBadge: {
+    position: 'absolute',
+    top: -5,
+    right: -5,
+    backgroundColor: colors.green,
+    borderRadius: 10,
+    width: 18,
+    height: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.white,
   },
   floatingButton: {
     height: verticalScale(50),

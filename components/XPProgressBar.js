@@ -13,6 +13,7 @@ const XPProgressBar = ({
   initialLevel = 0, // Set initial level to 0 for new accounts
   onPress,
   showDetails = false,
+  userXP = 0,
   // Function to calculate XP required for next level
   // Default formula: baseXP * level^1.5
   getRequiredXP = (level, baseXP = 50) => Math.floor(baseXP * Math.pow(level, 1.5))
@@ -56,7 +57,7 @@ const XPProgressBar = ({
     const dailyBonus = dayProgress >= 0.9 ? 15 : dayProgress >= 0.7 ? 8 : 0;
     
     // 4. Calculate total XP (could be from a cumulative database value in a real app)
-    const calculatedTotalXP = savingXP + weeklyBonus + dailyBonus;
+    const calculatedTotalXP = savingXP + weeklyBonus + dailyBonus + userXP;
     setTotalXP(calculatedTotalXP);
     
     // Find the correct level based on total XP

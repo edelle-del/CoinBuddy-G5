@@ -11,11 +11,11 @@ import { useAuth } from "@/contexts/authContext";
 const HomeCard = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [viewIncome, setViewIncome] = useState(false); // Toggle between income and expense
-  const [goalAmount, setGoalAmount] = useState("2000"); // Default goal amount
+  const [weeklyGoal, setWeeklyGoal] = useState(500); // Default weekly goal amount
   const [goalPeriod, setGoalPeriod] = useState("week"); // Default period (month/week)
   const [showGoalModal, setShowGoalModal] = useState(false); // Modal for goal editing
-  const [tempGoalAmount, setTempGoalAmount] = useState(""); // Temporary state for editing
-  const [tempGoalPeriod, setTempGoalPeriod] = useState(""); // Temporary state for editing
+  const [tempGoalAmount, setTempGoalAmount] = useState("500"); // Temporary state for editing
+  const [tempGoalPeriod, setTempGoalPeriod] = useState("week"); // Temporary state for editing
 
   const { user } = useAuth();
   const {
@@ -48,9 +48,9 @@ const HomeCard = () => {
     // Here you could load the goal from AsyncStorage or your database
     // For example:
     // const loadGoal = async () => {
-    //   const savedGoal = await AsyncStorage.getItem('goalAmount');
+    //   const savedGoal = await AsyncStorage.getItem('weeklyGoal');
     //   const savedPeriod = await AsyncStorage.getItem('goalPeriod');
-    //   if (savedGoal) setGoalAmount(savedGoal);
+    //   if (savedGoal) setWeeklyGoal(Number(savedGoal));
     //   if (savedPeriod) setGoalPeriod(savedPeriod);
     // };
     // loadGoal();
@@ -58,21 +58,24 @@ const HomeCard = () => {
 
   // Open the goal edit modal with current values
   const openGoalModal = () => {
-    setTempGoalAmount(goalAmount);
+    setTempGoalAmount(weeklyGoal.toString());
     setTempGoalPeriod(goalPeriod);
     setShowGoalModal(true);
   };
 
-  // Save the new goal settings
+  // Save the new goal settings - this will update weeklyGoal from user input
   const saveGoal = () => {
-    setGoalAmount(tempGoalAmount);
+    const newGoalAmount = Number(tempGoalAmount) || 0;
+    setWeeklyGoal(newGoalAmount); // Update the weeklyGoal with user input
     setGoalPeriod(tempGoalPeriod);
     setShowGoalModal(false);
     
     // Here you could save to AsyncStorage or your database
     // For example:
-    // AsyncStorage.setItem('goalAmount', tempGoalAmount);
+    // AsyncStorage.setItem('weeklyGoal', newGoalAmount.toString());
     // AsyncStorage.setItem('goalPeriod', tempGoalPeriod);
+    
+    console.log("Goal updated to:", newGoalAmount, "per", tempGoalPeriod);
   };
 
   const totals = getTotals();
@@ -137,7 +140,7 @@ const HomeCard = () => {
         <Typo color={colors.white} size={30} fontWeight="bold">
           ₱{walletLoading ? "----" : totals.expenses.toFixed(2)}{" "}
           <Typo size={14} color={colors.white}>
-            /₱{goalAmount} per {goalPeriod}
+            /₱{weeklyGoal} per {goalPeriod}
           </Typo>
         </Typo>
       )}

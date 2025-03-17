@@ -26,8 +26,14 @@ import {
   fetchYearlyStats,
 } from "@/services/transactionService";
 import TransactionList from "@/components/TransactionList";
-
-const { width: screenWidth } = Dimensions.get("window");
+import XPProgressBar from "@/components/XPProgressBar"; // Import your XP component
+import { 
+  collection, 
+  query, 
+  orderBy, 
+  getDocs 
+} from "firebase/firestore";
+import { firestore } from "@/config/firebase"; // adjust path as needed
 
 const barData = [
   {
@@ -105,13 +111,30 @@ const barData = [
   // { value: 30, frontColor: colors.rose },
 ];
 
+// Add this type definition at the top, outside the component
+type LeaderboardItem = {
+  id: string;
+  name: string;
+  amount: number;
+  xp: number;
+  avatar: string | null;
+};
+
 const Analytics = () => {
   const [chartLoading, setChartLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [chartData, setChartData] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const { user } = useAuth();
-
+  const { width: screenWidth } = Dimensions.get("window");
+  
+  // Added new state variables for leaderboard
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardItem[]>([]);
+  const [leaderboardLoading, setLeaderboardLoading] = useState(false);
+  const [leaderboardType, setLeaderboardType] = useState<'savings' | 'xp'>('savings');
+  const [userRank, setUserRank] = useState<number | null>(null);
+  const [totalUsers, setTotalUsers] = useState(0);
+  
   useEffect(() => {
     if (activeIndex == 0) {
       getWeeklyStats();
@@ -124,9 +147,14 @@ const Analytics = () => {
     }
   }, [activeIndex]);
 
+  // Add useEffect for leaderboard
+  useEffect(() => {
+    fetchLeaderboardData(leaderboardType);
+  }, [leaderboardType]);
+
   const getWeeklyStats = async () => {
     setChartLoading(true);
-    let res = await fetchWeeklyStats(user?.uid as string);
+    let res = await fetchWeeklyStats(user?.uid || "");
     setChartLoading(false);
     if (res.success) {
       setChartData(res.data.stats);
@@ -158,6 +186,90 @@ const Analytics = () => {
     } else {
       Alert.alert("Error", res.msg);
     }
+  };
+
+  // Add fetchLeaderboardData function
+  const fetchLeaderboardData = async (type: 'savings' | 'xp' = 'savings') => {
+    try {
+      setLeaderboardLoading(true);
+      // Firestore query to get leaderboard data
+    const leaderboardRef = collection(firestore, "leaderboard"); // or whatever your collection is named
+    const leaderboardQuery = query(
+      leaderboardRef,
+      orderBy(type === 'savings' ? 'amount' : 'xp', 'desc')
+    );
+    
+    const querySnapshot = await getDocs(leaderboardQuery);
+    const leaderboardData = querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        name: data.name,
+        amount: data.amount,
+        xp: data.xp,
+        avatar: data.avatar || null
+      };
+    });
+    
+    setLeaderboardData(leaderboardData);
+      
+      // Find user's rank
+    const userIndex = leaderboardData.findIndex(item => item.id === user?.uid);
+    setUserRank(userIndex !== -1 ? userIndex + 1 : null);
+    setTotalUsers(leaderboardData.length);
+    
+    setLeaderboardLoading(false);
+  } catch (error) {
+    console.error("Error fetching leaderboard data:", error);
+    setLeaderboardLoading(false);
+  }
+};
+
+  // Add renderLeaderboardItem function
+  const renderLeaderboardItem = ({ item, index }: { item: LeaderboardItem; index: number }) => {
+    const isCurrentUser = item.id === user?.uid;
+    const displayValue = leaderboardType === 'savings' ? 
+      `₱${item.amount.toLocaleString()}` : 
+      `${item.xp.toLocaleString()} XP`;
+    
+    // Determine medal for top 3
+    const getMedalIcon = (rank: number) => {
+      if (rank === 0) return <Icons.Medal size={verticalScale(16)} color="#FFD700" weight="fill" />;
+      if (rank === 1) return <Icons.Medal size={verticalScale(16)} color="#C0C0C0" weight="fill" />;
+      if (rank === 2) return <Icons.Medal size={verticalScale(16)} color="#CD7F32" weight="fill" />;
+      return null;
+    };
+    
+    return (
+      <View style={[styles.leaderboardItem, isCurrentUser && styles.currentUserItem]}>
+        <View style={styles.rankContainer}>
+          {index < 3 ? (
+            <View style={styles.medalContainer}>
+              {getMedalIcon(index)}
+            </View>
+          ) : (
+            <Typo size={14} style={styles.rankText}>{index + 1}</Typo>
+          )}
+        </View>
+        
+        <View style={styles.userInfoContainer}>
+          {item.avatar ? (
+            <Image source={{ uri: item.avatar }} style={styles.avatar} />
+          ) : (
+            <View style={[styles.avatar, { backgroundColor: colors.neutral300, justifyContent: 'center', alignItems: 'center' }]}>
+              <Icons.User size={verticalScale(16)} color={colors.neutral600} />
+            </View>
+          )}
+          <Typo size={14} fontWeight={isCurrentUser ? "bold" : "normal"} style={styles.nameText}>
+            {item.name}
+          </Typo>
+        </View>
+        
+        <Typo size={14} fontWeight="500" style={styles.amountText}>
+          {displayValue}
+        </Typo>
+      </View>
+    );
   };
 
   return (
@@ -238,6 +350,131 @@ const Analytics = () => {
             )}
           </View>
 
+          {/* Added Leaderboard Section */}
+          <View>
+            <Typo size={16} fontWeight="bold" style={styles.sectionTitle}>
+              Leaderboard
+            </Typo>
+            
+            {/* Toggle between Savings and XP leaderboard */}
+            <View style={styles.dataTypeSelector}>
+              <TouchableOpacity
+                style={[
+                  styles.dataTypeButton,
+                  leaderboardType === 'savings' && styles.activeDataTypeButton,
+                ]}
+                onPress={() => setLeaderboardType('savings')}
+              >
+                <Icons.Wallet size={verticalScale(16)} color={colors.neutral900} style={{ marginRight: 6 }} />
+                <Typo size={14} fontWeight={leaderboardType === 'savings' ? "bold" : "normal"}>
+                  Savings
+                </Typo>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={[
+                  styles.dataTypeButton,
+                  leaderboardType === 'xp' && styles.activeDataTypeButton,
+                ]}
+                onPress={() => setLeaderboardType('xp')}
+              >
+                <Icons.Star size={verticalScale(16)} color={colors.neutral900} style={{ marginRight: 6 }} />
+                <Typo size={14} fontWeight={leaderboardType === 'xp' ? "bold" : "normal"}>
+                  Experience
+                </Typo>
+              </TouchableOpacity>
+            </View>
+            
+            {/* User's rank card */}
+            {userRank && (
+              <View style={styles.userRankCard}>
+                <Typo size={14} fontWeight="500">Your Ranking</Typo>
+                <View style={styles.userRankContent}>
+                  <View style={styles.rankInfoContainer}>
+                    <View style={styles.rankIcon}>
+                      <Icons.Trophy size={verticalScale(24)} color={colors.primary} weight="fill" />
+                    </View>
+                    <Typo size={30} fontWeight="bold">{userRank}</Typo>
+                  </View>
+                  <View style={styles.divider} />
+                  <View style={{ marginLeft: spacingX._10 }}>
+                    <Typo size={14} color={colors.neutral700}>
+                      {leaderboardType === 'savings' ? 'Total Saved' : 'Total XP'}
+                    </Typo>
+                    <Typo size={20} fontWeight="bold">
+                    {leaderboardType === 'savings' 
+                      ? `₱${leaderboardData.find(item => item.id === user?.uid)?.amount?.toLocaleString() || 0}`
+                      : `${leaderboardData.find(item => item.id === user?.uid)?.xp?.toLocaleString() || 0} XP`
+                    }
+                      </Typo>
+                  </View>
+                </View>
+                <Typo size={12} color={colors.neutral600} style={styles.outOfText}>
+                  Out of {totalUsers} users
+                </Typo>
+              </View>
+            )}
+            
+            {/* Leaderboard list */}
+            <View style={styles.leaderboardContainer}>
+              {leaderboardLoading ? (
+                <View style={styles.leaderboardLoadingContainer}>
+                  <Loading color={colors.primary} />
+                </View>
+              ) : leaderboardData.length > 0 ? (
+                <FlatList
+                  data={leaderboardData}
+                  renderItem={renderLeaderboardItem}
+                  keyExtractor={(item) => item.id}
+                  scrollEnabled={false}
+                  ListHeaderComponent={() => (
+                    <View style={styles.leaderboardListHeader}>
+                      <View style={styles.rankContainer}>
+                        <Typo size={12} color={colors.neutral600}>Rank</Typo>
+                      </View>
+                      <View style={styles.userInfoContainer}>
+                        <Typo size={12} color={colors.neutral600}>User</Typo>
+                      </View>
+                      <Typo size={12} color={colors.neutral600}>
+                        {leaderboardType === 'savings' ? 'Saved' : 'XP'}
+                      </Typo>
+                    </View>
+                  )}
+                />
+              ) : (
+                <View style={styles.emptyLeaderboard}>
+                  <Icons.Users size={verticalScale(48)} color={colors.neutral400} />
+                  <Typo size={14} color={colors.neutral700} style={{ marginTop: spacingY._10 }}>
+                    No leaderboard data available
+                  </Typo>
+                  <TouchableOpacity 
+                    style={styles.refreshButton}
+                    onPress={() => fetchLeaderboardData(leaderboardType)}
+                  >
+                    <Icons.ArrowClockwise size={verticalScale(16)} color={colors.primary} style={{ marginRight: 4 }} />
+                    <Typo size={14} color={colors.primary}>Refresh</Typo>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          </View>
+
+          {/* XP Progress (if viewing XP leaderboard) */}
+          {leaderboardType === 'xp' && (
+            <View style={{ marginVertical: spacingY._10 }}>
+              <XPProgressBar
+                savedMoney={leaderboardData.find(item => item.id === user?.uid)?.amount || 0}
+                weeklyGoal={700}
+                weeklyExpenses={400}
+                dailyExpenses={80}
+                initialLevel={0}
+                showDetails={false}
+                userXP={leaderboardData.find(item => item.id === user?.uid)?.xp || 0}
+                onPress={() => {/* Toggle XP details if needed */}}
+              />
+            </View>
+          )}
+
           {/* transactions */}
           <View>
             <TransactionList
@@ -294,8 +531,8 @@ const styles = StyleSheet.create({
     paddingVertical: spacingY._7,
     gap: spacingY._10,
   },
-   // New styles for leaderboard
-   dataTypeSelector: {
+  // New styles for leaderboard
+  dataTypeSelector: {
     flexDirection: "row",
     backgroundColor: colors.neutral200,
     borderRadius: radius._6,

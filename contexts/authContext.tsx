@@ -30,10 +30,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           name: firebaseUser?.displayName,
         });
         updateUserData(firebaseUser.uid);
-        router.replace("/(tabs)");
+        router.replace("/(tabs)"as any);
       } else {
         setUser(null);
-        router.replace("/(auth)/welcome");
+        router.replace('/(auth)/welcome' as any);
       }
     });
 

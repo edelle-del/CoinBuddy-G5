@@ -21,7 +21,7 @@ const sendVerificationCode = async (email, code) => {
   console.log(`Verification code ${code} would be sent to ${email}`);
   
   // In a real app, you would call your backend API here, e.g:
-  // await fetch('https://yourapi.com/send-verification', {
+  // await fetch('Ahttps://yourapi.com/send-verification', {
   //   method: 'POST',
   //   body: JSON.stringify({ email, code }),
   //   headers: { 'Content-Type': 'application/json' }

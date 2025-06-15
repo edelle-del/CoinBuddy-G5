@@ -9,6 +9,7 @@ import Typo from "@/components/Typo";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import Button from "@/components/Button";
 import { useAuth } from "@/contexts/authContext";
+import { Link, router } from "expo-router";
 import Loading from "@/components/Loading";
 
 const WelcomePage = () => {
@@ -20,7 +21,7 @@ const WelcomePage = () => {
         {/* login & image */}
         <View>
           <TouchableOpacity
-            onPress={() => router.push("/(auth)/login" as any)}
+            onPress={() => router.push("/(auth)/login")}
             style={styles.loginButton}
           >
             <Typo fontWeight={"500"}>Log In</Typo>
@@ -68,7 +69,7 @@ const WelcomePage = () => {
               .damping(12)}
             style={styles.buttonContainer}
           >
-            <Button onPress={() => router.push("/(auth)/register" as any)}>
+            <Button onPress={() => router.push("/(auth)/register")}>
               <Typo size={22} color={colors.white} fontWeight={"600"}>
                 Get Started
               </Typo>

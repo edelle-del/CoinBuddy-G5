@@ -390,7 +390,7 @@ const Home = () => {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => router.push("/(modals)/searchModal" as any)}
+                onPress={() => router.push("/(modals)/searchModal")}
               >
                 <Icons.MagnifyingGlass
                   size={verticalScale(22)}
@@ -404,7 +404,7 @@ const Home = () => {
         </ScrollView>
         
         <Button
-          onPress={() => router.push("/(modals)/transactionModal" as any)}
+          onPress={() => router.push("/(modals)/transactionModal")}
           style={styles.floatingButton}
         >
           <Icons.Plus

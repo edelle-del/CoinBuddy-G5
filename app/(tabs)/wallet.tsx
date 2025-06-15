@@ -61,7 +61,7 @@ const Wallet = () => {
               My Wallets
             </Typo>
             <TouchableOpacity
-              onPress={() => router.push("/(modals)/walletModal" as any)}
+              onPress={() => router.push("/(modals)/walletModal")}
             >
               <Icons.PlusCircle
                 weight="fill"

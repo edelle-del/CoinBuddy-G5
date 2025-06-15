@@ -9,11 +9,6 @@ import { StatusBar } from "expo-status-bar";
 
 const SplashScreen = () => {
   const router = useRouter();
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     router.replace("/welcome");
-  //   }, 1500);
-  // }, []);
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
